@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fbf7f0">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Devis express</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#fbf7f0;--encre:#1b1b3a;--accent:#ff5c39;--bleu:#3d5afe;--doux:#ece6da;--ext:#1b1b3a}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #0d0d22,0 40px 90px -20px #000a}}
+header{padding:30px 20px 6px}
+header small{font-size:.76rem;font-weight:600;opacity:.6}
+h1{font-size:2rem;font-weight:900;font-stretch:80%;line-height:1}
+h1::after{content:"";display:inline-block;width:.5em;height:.5em;border-radius:50%;background:var(--accent);margin-left:6px}
+.scroll{flex:1;overflow-y:auto;padding:6px 20px 200px;scrollbar-width:none}
+h2{font-size:.76rem;text-transform:uppercase;letter-spacing:.14em;margin:22px 0 10px;display:flex;gap:8px;align-items:center}
+h2 i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--encre);color:var(--fond);display:grid;place-items:center;font-size:.72rem}
+.surf{background:#fff;border-radius:24px;padding:20px}
+.surf b{font-size:3.4rem;font-weight:900;font-stretch:78%;line-height:1}
+.surf b small{font-size:1.2rem;font-weight:600}
+.surf p{font-size:.85rem;opacity:.6;margin-top:2px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:9px;margin-top:18px;background:linear-gradient(90deg,var(--bleu) var(--p,30%),var(--doux) var(--p,30%));outline:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:6px solid var(--bleu);box-shadow:0 4px 10px #0003}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:6px solid var(--bleu)}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid transparent;border-radius:18px;padding:14px 16px;margin-bottom:8px;transition:.15s}
+.opt div{flex:1}.opt b{display:block;font-weight:700}.opt small{opacity:.6}
+.opt::before{content:"";width:22px;height:22px;border-radius:50%;border:2px solid var(--doux);flex:none;transition:.15s}
+.opt.carre::before{border-radius:7px}
+.opt.on{border-color:var(--bleu)}
+.opt.on::before{background:var(--bleu);border-color:var(--bleu);box-shadow:inset 0 0 0 4px #fff}
+.opt em{font-style:normal;font-weight:700;font-size:.85rem;color:var(--bleu);white-space:nowrap}
+.resultat{position:absolute;inset:auto 12px 14px;z-index:4;background:var(--encre);color:#fff;border-radius:28px;padding:20px;box-shadow:0 20px 40px -14px #1b1b3a}
+.resultat small{opacity:.7;font-size:.8rem}
+.resultat .prix{font-size:2.3rem;font-weight:900;font-stretch:78%;line-height:1.1;margin:2px 0 12px}
+.resultat .prix span{color:var(--accent)}
+.cta{display:block;width:100%;padding:15px;border-radius:16px;background:var(--accent);color:#fff;font-weight:800;text-align:center;text-decoration:none}
+.voile{position:absolute;inset:0;background:#0008;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:var(--fond);border-radius:30px 30px 0 0;padding:26px 20px 28px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1)}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet h3{font-size:1.5rem;font-weight:900;font-stretch:80%;margin-bottom:6px}
+.sheet p{opacity:.7;font-size:.9rem;margin-bottom:14px}
+.sheet input{width:100%;padding:15px;border-radius:14px;border:2px solid var(--doux);background:#fff;outline:0;margin-bottom:10px}
+.sheet input:focus{border-color:var(--bleu)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header><small data-t="metier"></small><h1 data-t="nom"></h1></header>
+  <div class="scroll">
+    <h2><i>1</i>Surface au sol</h2>
+    <div class="surf"><b><span id="m2"></span><small> m²</small></b><p id="murs"></p><input type="range" id="surface" aria-label="Surface au sol en mètres carrés"></div>
+    <h2><i>2</i>État des murs</h2><div id="etats"></div>
+    <h2><i>3</i>Finition</h2><div id="finitions"></div>
+    <h2><i>4</i>En option</h2><div id="options"></div>
+  </div>
+  <div class="resultat">
+    <small>Estimation TTC, fournitures comprises</small>
+    <div class="prix"><span id="bas"></span> – <span id="haut"></span> €</div>
+    <button class="cta" id="demander">Recevoir mon devis ferme</button>
+  </div>
+  <div class="voile" id="voile"></div>
+  <div class="sheet">
+    <h3>On vous rappelle sous 24 h</h3><p>Votre estimation est envoyée à l'artisan par WhatsApp. Visite et devis ferme gratuits.</p>
+    <input id="prenom" placeholder="Votre prénom" autocomplete="given-name">
+    <input id="ville" placeholder="Votre rue ou quartier">
+    <a class="cta" id="envoyer" target="_blank" rel="noopener">Envoyer ma demande</a>
+  </div>
+</div>
+
+<script>
+const { $, $$, esc, wa, store } = K, C = CONFIG;
+let E = store.get("devis", { surface: C.surface.depart, etat: 0, finition: 1, options: [] });
+const R = $("#surface"); R.min = C.surface.min; R.max = C.surface.max; R.value = E.surface;
+let affiche = { bas: 0, haut: 0 }, anim;
+
+function liste(id, items, actif, prix, carre) {
+  $(id).innerHTML = items.map((o, i) => `<button class="opt ${carre ? "carre" : ""} ${actif(i) ? "on" : ""}" data-i="${i}"><div><b>${esc(o.nom)}</b><small>${esc(o.detail)}</small></div><em>${prix(o)}</em></button>`).join("");
+}
+function calcule() {
+  const s = E.surface, murs = Math.round(s * C.coefMurs);
+  let total = murs * C.finitions[E.finition].prixM2 * C.etats[E.etat].coef;
+  E.options.forEach((i) => { const o = C.options[i]; total += o.forfait || o.prixM2Sol * s; });
+  $("#m2").textContent = s;
+  $("#murs").textContent = `soit environ ${murs} m² de murs à peindre`;
+  R.style.setProperty("--p", ((s - C.surface.min) / (C.surface.max - C.surface.min)) * 100 + "%");
+  liste("#etats", C.etats, (i) => i === E.etat, (o) => (o.coef === 1 ? "inclus" : "+" + Math.round((o.coef - 1) * 100) + " %"));
+  liste("#finitions", C.finitions, (i) => i === E.finition, (o) => o.prixM2 + " €/m²");
+  liste("#options", C.options, (i) => E.options.includes(i), (o) => (o.forfait ? "+" + o.forfait + " €" : "+" + o.prixM2Sol + " €/m²"), true);
+  $$("#etats .opt").forEach((b) => (b.onclick = () => { E.etat = +b.dataset.i; calcule(); }));
+  $$("#finitions .opt").forEach((b) => (b.onclick = () => { E.finition = +b.dataset.i; calcule(); }));
+  $$("#options .opt").forEach((b) => (b.onclick = () => { const i = +b.dataset.i; E.options = E.options.includes(i) ? E.options.filter((x) => x !== i) : [...E.options, i]; calcule(); }));
+  store.set("devis", E);
+
+  // Le prix « roule » jusqu'à sa nouvelle valeur
+  const r = (n) => Math.round(n / 10) * 10, cible = { bas: r(total * (1 - C.marge)), haut: r(total * (1 + C.marge)) }, depart = { ...affiche }, t0 = performance.now();
+  cancelAnimationFrame(anim);
+  (function pas(t) {
+    const k = Math.min((t - t0) / 450, 1), e = 1 - Math.pow(1 - k, 3);
+    affiche = { bas: depart.bas + (cible.bas - depart.bas) * e, haut: depart.haut + (cible.haut - depart.haut) * e };
+    $("#bas").textContent = Math.round(affiche.bas).toLocaleString("fr-FR");
+    $("#haut").textContent = Math.round(affiche.haut).toLocaleString("fr-FR");
+    if (k < 1) anim = requestAnimationFrame(pas); else affiche = cible;
+  })(t0);
+
+  const opts = E.options.map((i) => C.options[i].nom).join(", ") || "aucune";
+  $("#envoyer").href = wa(`Bonjour ${C.nom}, demande de devis de ${$("#prenom").value.trim() || "(prénom)"} (${$("#ville").value.trim() || "adresse à préciser"}).\n• Surface au sol : ${s} m² (≈ ${murs} m² de murs)\n• État : ${C.etats[E.etat].nom}\n• Finition : ${C.finitions[E.finition].nom}\n• Options : ${opts}\nEstimation de l'app : ${cible.bas} – ${cible.haut} €`);
+}
+R.oninput = () => { E.surface = +R.value; calcule(); };
+$("#demander").onclick = () => $("#app").classList.add("ouvert");
+$("#voile").onclick = () => $("#app").classList.remove("ouvert");
+$("#prenom").oninput = $("#ville").oninput = calcule;
+$("#envoyer").onclick = (e) => { if (!$("#prenom").value.trim()) { e.preventDefault(); $("#prenom").focus(); K.toast("Indiquez votre prénom"); } };
+calcule();
+</script>
+</body>
+</html>

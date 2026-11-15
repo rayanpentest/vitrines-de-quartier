@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eef1ff">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Planning des cours</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#eef1ff;--encre:#10143a;--accent:#ff4d6d;--bleu:#2f3cff;--jaune:#ffd23f;--ext:#10143a}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #070920,0 40px 90px -20px #000a}}
+header{padding:30px 20px 14px;background:var(--bleu);color:#fff;border-radius:0 0 30px 30px}
+header small{font-weight:600;opacity:.8;font-size:.8rem}
+h1{font-family:Unbounded,sans-serif;font-weight:800;font-size:1.6rem;line-height:1.1}
+.jours{display:flex;gap:6px;margin-top:16px;overflow-x:auto;scrollbar-width:none}
+.jours button{flex:1;min-width:46px;padding:9px 0;border-radius:16px;color:#fff;font-size:.7rem;font-weight:600;text-transform:uppercase;background:#ffffff1f;transition:.2s}
+.jours button b{display:block;font-family:Unbounded,sans-serif;font-size:1.05rem;font-weight:800}
+.jours button.on{background:var(--jaune);color:var(--encre);transform:translateY(-3px)}
+.scroll{flex:1;overflow-y:auto;padding:16px 16px 100px;scrollbar-width:none}
+h2{font-family:Unbounded,sans-serif;font-weight:800;font-size:1.05rem;margin:4px 4px 12px}
+.cours{background:#fff;border-radius:22px;padding:16px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+.anim .cours{animation:monte .4s both}
+@keyframes monte{from{opacity:0;transform:translateY(16px)}}
+.cours time{font-family:Unbounded,sans-serif;font-weight:800;font-size:1.1rem;grid-row:span 2;text-align:center}
+.cours time small{display:block;font-family:Manrope,sans-serif;font-weight:600;font-size:.7rem;opacity:.55}
+.cours h3{font-size:1.02rem;font-weight:800;line-height:1.2}
+.cours p{font-size:.8rem;opacity:.7;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.niv{display:inline-flex;gap:2px}
+.niv i{width:5px;height:11px;border-radius:2px;background:#10143a22}.niv i.a{background:var(--accent)}
+.cours button{grid-row:1/3;grid-column:3;padding:10px 14px;border-radius:14px;background:var(--bleu);color:#fff;font-weight:800;font-size:.82rem;transition:.2s}
+.cours button:active{transform:scale(.93)}
+.cours.pris{background:var(--encre);color:#fff}
+.cours.pris button{background:var(--jaune);color:var(--encre)}
+.cours.complet button{background:#10143a18;color:#10143a80;cursor:not-allowed}
+.jauge{grid-column:1/-1;height:5px;border-radius:9px;background:#10143a14;margin-top:8px;overflow:hidden}
+.pris .jauge{background:#ffffff2b}
+.jauge i{display:block;height:100%;border-radius:9px;background:var(--accent);transition:width .5s}
+.rien{text-align:center;padding:50px 20px;opacity:.6}
+.tabs{position:absolute;inset:auto 14px 16px;z-index:4;display:flex;background:var(--encre);border-radius:22px;padding:6px}
+.tabs button{flex:1;padding:13px;border-radius:17px;color:#fff;font-weight:800;font-size:.9rem;transition:.2s}
+.tabs button.on{background:#fff;color:var(--encre)}
+.tabs span{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:99px;background:var(--accent);color:#fff;font-size:.72rem;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <small data-t="metier"></small><h1 data-t="nom"></h1>
+    <div class="jours" id="jours"></div>
+  </header>
+  <div class="scroll" id="liste"></div>
+  <nav class="tabs"><button id="tPlanning" class="on">Planning</button><button id="tMes">Mes cours<span id="nb">0</span></button></nav>
+</div>
+
+<script>
+const { $, $$, esc, fh, store, toast, JOURS } = K, C = CONFIG;
+const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const auj = new Date(), DATES = Array.from({ length: 7 }, (_, i) => new Date(auj.getFullYear(), auj.getMonth(), auj.getDate() + i));
+let jour = 0, vue = "planning";
+let resas = store.get("resas", []).filter((r) => r.date >= iso(auj));   // [{date, h, nom}]
+const cle = (date, c) => date + "|" + c.h + "|" + c.nom;
+const reserve = (date, c) => resas.some((r) => cle(r.date, r) === cle(date, c));
+// Remplissage de départ, stable d'un jour à l'autre (pour que la démo ait l'air vivante)
+const dejaPris = (date, c) => { if (!C.demo) return 0; let x = 0; for (const ch of cle(date, c)) x = (x * 31 + ch.charCodeAt(0)) % 997; return Math.floor((x / 997) * c.places * 0.9); };
+
+function carte(date, c, n, avecJour) {
+  const pris = reserve(date, c), occupe = dejaPris(date, c) + (pris ? 1 : 0), reste = c.places - occupe, complet = reste <= 0 && !pris;
+  const d = new Date(date + "T12:00");
+  return `<article class="cours ${pris ? "pris" : ""} ${complet ? "complet" : ""}" style="animation-delay:${n * 60}ms">
+    <time>${fh(c.h)}<small>${c.duree} min</small></time>
+    <h3>${esc(c.nom)}</h3>
+    <button data-date="${date}" data-h="${c.h}" data-nom="${esc(c.nom)}" ${complet ? "disabled" : ""}>${pris ? "✓ Inscrit" : complet ? "Complet" : "Réserver"}</button>
+    <p>${avecJour ? esc(JOURS[d.getDay()] + " " + d.getDate()) + " · " : ""}${esc(c.coach)} <span class="niv">${[1, 2, 3].map((i) => `<i class="${i <= c.intensite ? "a" : ""}"></i>`).join("")}</span> ${complet ? "" : reste + " place" + (reste > 1 ? "s" : "")}</p>
+    <div class="jauge"><i style="width:${Math.min(100, (occupe / c.places) * 100)}%"></i></div></article>`;
+}
+
+function rendu(anim = true) {
+  $("#liste").classList.toggle("anim", anim);
+  $("#jours").innerHTML = DATES.map((d, i) => `<button data-i="${i}" class="${i === jour && vue === "planning" ? "on" : ""}">${i === 0 ? "Auj." : JOURS[d.getDay()].slice(0, 3)}<b>${d.getDate()}</b></button>`).join("");
+  $("#tPlanning").classList.toggle("on", vue === "planning"); $("#tMes").classList.toggle("on", vue === "mes");
+  $("#nb").textContent = resas.length; $("#nb").hidden = !resas.length;
+  const L = $("#liste");
+  if (vue === "planning") {
+    const d = DATES[jour], date = iso(d), now = auj.getHours() * 60 + auj.getMinutes();
+    const liste = (C.planning[d.getDay()] || []).filter((c) => jour > 0 || K.min(c.h) > now);
+    L.innerHTML = `<h2>${jour === 0 ? "Aujourd'hui" : esc(JOURS[d.getDay()] + " " + d.getDate())}</h2>` + (liste.length ? liste.map((c, n) => carte(date, c, n)).join("") : `<p class="rien">Plus de cours ce jour-là.<br>Regardez demain !</p>`);
+  } else {
+    const mes = resas.map((r) => ({ r, c: (C.planning[new Date(r.date + "T12:00").getDay()] || []).find((c) => c.h === r.h && c.nom === r.nom) })).filter((x) => x.c);
+    L.innerHTML = `<h2>Mes prochains cours</h2>` + (mes.length ? mes.map(({ r, c }, n) => carte(r.date, c, n, true)).join("") : `<p class="rien">Aucune réservation.<br>Choisissez un cours dans le planning.</p>`);
+  }
+  $$("#jours button").forEach((b) => (b.onclick = () => { jour = +b.dataset.i; vue = "planning"; rendu(); }));
+  $$(".cours button").forEach((b) => (b.onclick = () => {
+    const r = { date: b.dataset.date, h: b.dataset.h, nom: b.dataset.nom }, i = resas.findIndex((x) => cle(x.date, x) === cle(r.date, r));
+    if (i >= 0) { resas.splice(i, 1); toast("Réservation annulée"); } else { resas.push(r); toast("C'est réservé. À tout à l'heure !"); if (navigator.vibrate) navigator.vibrate(40); }
+    resas.sort((a, b) => (a.date + a.h).localeCompare(b.date + b.h));
+    store.set("resas", resas); rendu(false);
+  }));
+}
+$("#tPlanning").onclick = () => { vue = "planning"; rendu(); };
+$("#tMes").onclick = () => { vue = "mes"; rendu(); };
+rendu();
+</script>
+</body>
+</html>

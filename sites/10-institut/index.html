@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Institut de beauté</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f7ece8;--encre:#3b2530;--accent:#c4577c;--lueur1:#f8b9a8;--lueur2:#c9b6f2;--lueur3:#ffe1b8;--mx:70%;--my:20%}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.65;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,.logo{font-family:Italiana,Georgia,serif;font-weight:400;line-height:1.02}
+/* fond lumineux qui suit le curseur */
+.lueurs{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(40vmax 40vmax at var(--mx) var(--my),var(--lueur1),transparent 70%),
+  radial-gradient(46vmax 46vmax at 12% 78%,var(--lueur2),transparent 70%),
+  radial-gradient(38vmax 38vmax at 88% 92%,var(--lueur3),transparent 70%);filter:saturate(1.1)}
+body>*:not(.lueurs){position:relative;z-index:1}
+.verre{background:#ffffff66;backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid #ffffffaa;border-radius:32px;box-shadow:0 20px 60px -30px #3b253055}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:16px clamp(12px,4vw,48px);padding:12px 22px;border-radius:99px}
+.logo{font-size:1.8rem;letter-spacing:.08em}
+.etat{font-size:.8rem;font-weight:700}
+.etat::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#d98c8c;margin-right:8px}
+.etat.ouvert::before{background:#62c08a}
+.hero{padding:clamp(40px,8vw,120px) clamp(16px,5vw,60px) clamp(30px,5vw,60px);text-align:center}
+.sur{font-size:.76rem;letter-spacing:.34em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+h1{font-size:clamp(3rem,10vw,8.4rem);margin:18px auto 22px;max-width:12ch}
+.hero p.i{max-width:56ch;margin:auto;font-size:1.08rem}
+.rituel{max-width:980px;margin:0 auto clamp(50px,8vw,100px);padding:clamp(22px,4vw,44px);width:calc(100% - 2*clamp(12px,4vw,48px))}
+.rituel h2{font-size:clamp(1.8rem,4vw,2.8rem);text-align:center;margin-bottom:26px}
+.rang{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-bottom:14px}
+.rang>span{font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;opacity:.6;width:100%;text-align:center}
+.rang button{font:inherit;font-weight:700;padding:11px 22px;border-radius:99px;border:1px solid #3b253033;background:#ffffff88;color:inherit;cursor:pointer;transition:.25s}
+.rang button:hover{border-color:var(--accent)}
+.rang button.on{background:var(--encre);color:#fff;border-color:var(--encre)}
+.propose{margin-top:26px;display:grid;grid-template-columns:1fr auto;gap:8px 26px;align-items:center;background:#fff;border-radius:24px;padding:26px 28px;animation:fondu .6s both}
+.propose h3{font-size:clamp(1.7rem,4vw,2.6rem)}
+.propose b{font-family:Italiana,serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:400;color:var(--accent);grid-row:span 2}
+.propose p{opacity:.8}
+@keyframes fondu{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.btn{display:inline-block;margin-top:22px;padding:14px 28px;border-radius:99px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;transition:.25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px var(--accent)}
+.btn.alt{background:#fff;color:var(--encre)}
+.centre{text-align:center}
+.carte{max-width:980px;margin:0 auto;padding:0 clamp(16px,4vw,48px) clamp(50px,8vw,100px)}
+.carte h2,.avis h2{font-size:clamp(2rem,5vw,3.4rem);text-align:center;margin-bottom:28px}
+.carte details{border-bottom:1px solid #3b25302e}
+.carte summary{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:18px 4px;cursor:pointer;list-style:none;font-family:Italiana,serif;font-size:1.45rem}
+.carte summary::-webkit-details-marker{display:none}
+.carte summary span{font-family:Manrope,sans-serif;font-size:.9rem;font-weight:700;color:var(--accent);white-space:nowrap}
+.carte details p{padding:0 4px 18px;opacity:.8;max-width:60ch}
+.avis{padding:0 clamp(12px,4vw,48px) clamp(50px,8vw,100px)}
+.avis div{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;max-width:1100px;margin:auto}
+.avis blockquote{padding:28px;font-family:Italiana,serif;font-size:1.3rem;line-height:1.35}
+.avis cite{display:block;margin-top:14px;font:700 .8rem Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;margin:0 clamp(12px,4vw,48px);padding:clamp(24px,5vw,56px)}
+.infos h2{font-size:2.2rem;margin-bottom:14px}
+.hor{list-style:none;padding:0}
+.hor li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #3b253022}
+.hor .auj{color:var(--accent);font-weight:700}
+footer{padding:28px;text-align:center;font-size:.82rem;opacity:.65}
+@media(max-width:560px){.propose{grid-template-columns:1fr}.propose b{grid-row:auto}}
+</style>
+</head>
+<body>
+<div class="lueurs" aria-hidden="true"></div>
+<header class="top verre"><span class="logo" data-t="nom"></span><span class="etat" data-etat></span></header>
+
+<section class="hero">
+  <p class="sur" data-t="metier"></p>
+  <h1 data-t="accroche"></h1>
+  <p class="i" data-t="intro"></p>
+</section>
+
+<section class="rituel verre">
+  <h2>Trouvez votre rituel</h2>
+  <div class="rang" id="durees"><span>J'ai</span></div>
+  <div class="rang" id="envies"><span>J'ai envie de</span></div>
+  <div id="propose"></div>
+</section>
+
+<section class="carte"><h2 class="rv">Tous les soins</h2><div id="soins"></div></section>
+
+<section class="avis"><h2 class="rv">Elles en parlent</h2><div id="avis"></div></section>
+
+<section class="infos verre">
+  <div><h2>Horaires</h2><ul class="hor" data-horaires></ul></div>
+  <div><h2>L'institut</h2><p data-t="adresse"></p><a class="btn" data-href="tel" data-t="telephone"></a> <a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire</a></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, $$, esc, euro, wa } = K, C = CONFIG;
+
+// La lueur suit doucement le curseur (ou le doigt)
+addEventListener("pointermove", (e) => {
+  document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
+  document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
+}, { passive: true });
+
+// Sélecteur de rituel
+let duree = C.durees[1] ?? C.durees[0], envie = C.envies[0];
+function rituel() {
+  $("#durees").innerHTML = "<span>J'ai</span>" + C.durees.map((d) => `<button data-v="${d}" class="${d === duree ? "on" : ""}">${d} min</button>`).join("");
+  $("#envies").innerHTML = "<span>J'ai envie de</span>" + C.envies.map((e) => `<button data-v="${esc(e)}" class="${e === envie ? "on" : ""}">${esc(e)}</button>`).join("");
+  $$("#durees button").forEach((b) => (b.onclick = () => { duree = +b.dataset.v; rituel(); }));
+  $$("#envies button").forEach((b) => (b.onclick = () => { envie = b.dataset.v; rituel(); }));
+  const s = C.soins.find((x) => x.duree === duree && x.envie === envie);
+  $("#propose").innerHTML = s
+    ? `<div class="propose"><h3>${esc(s.nom)}</h3><b>${euro(s.prix)}</b><p>${esc(s.desc)}</p></div>
+       <p class="centre"><a class="btn" target="_blank" rel="noopener" href="${wa(`Bonjour ${C.nom}, je souhaite réserver « ${s.nom} » (${s.duree} min, ${s.prix} €). Quelles sont vos disponibilités ?`)}">Réserver ce soin</a></p>`
+    : `<div class="propose"><p>Pas encore de soin pour cette combinaison — appelez-nous, on le crée pour vous.</p></div>`;
+}
+rituel();
+
+$("#soins").innerHTML = C.soins.map((s) => `<details><summary>${esc(s.nom)}<span>${s.duree} min · ${euro(s.prix)}</span></summary><p>${esc(s.desc)}</p></details>`).join("");
+$("#avis").innerHTML = C.avis.map((a) => `<blockquote class="verre rv">« ${esc(a.texte)} »<cite>${esc(a.auteur)}</cite></blockquote>`).join("");
+</script>
+</body>
+</html>

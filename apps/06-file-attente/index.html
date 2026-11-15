@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff8f0">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>File d'attente</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#fff8f0;--encre:#2b1a1a;--accent:#d7263d;--doux:#f6e3d3;--ext:#2b1a1a}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column;transition:background .5s}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #150c0c,0 40px 90px -20px #000a}}
+.app.tour{background:var(--accent);color:#fff}
+header{padding:30px 22px 0}
+header small{font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+h1{font-family:Fraunces,serif;font-weight:900;font-size:1.9rem;line-height:1.05}
+.scroll{flex:1;overflow-y:auto;padding:18px 22px 26px;scrollbar-width:none;display:flex;flex-direction:column;gap:16px}
+.encours{display:flex;justify-content:space-between;align-items:center;background:var(--doux);border-radius:20px;padding:16px 20px;font-weight:500}
+.tour .encours{background:#ffffff26}
+.encours b{font-family:Fraunces,serif;font-weight:900;font-size:2.2rem;line-height:1}
+.encours b.bouge{animation:saute .5s}
+@keyframes saute{40%{transform:translateY(-10px) scale(1.15)}}
+/* le ticket */
+.ticket{flex:1;min-height:300px;background:#fff;color:var(--encre);border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px 20px;position:relative;box-shadow:0 24px 50px -24px #2b1a1a66}
+.ticket.neuf{animation:sort .6s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes sort{from{transform:translateY(-40px) rotate(-3deg);opacity:0}}
+.ticket::before,.ticket::after{content:"";position:absolute;top:66%;width:26px;height:26px;border-radius:50%;background:var(--fond);transition:background .5s}
+.ticket::before{left:-13px}.ticket::after{right:-13px}
+.tour .ticket::before,.tour .ticket::after{background:var(--accent)}
+.ticket small{font-size:.76rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;opacity:.55}
+.ticket .num{font-family:Fraunces,serif;font-weight:900;font-size:7.4rem;line-height:1;color:var(--accent);margin:4px 0 10px}
+.ticket p{font-size:1.15rem;font-weight:500}
+.ticket p b{font-weight:700}
+.ticket .trait{width:100%;border-top:2.5px dashed var(--doux);margin:22px 0 16px}
+.ticket .info{font-size:.9rem;opacity:.7}
+.vide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:20px}
+.vide b{font-family:Fraunces,serif;font-size:4.6rem;font-weight:900;color:var(--accent);line-height:1}
+.vide p{opacity:.7;max-width:26ch}
+.file{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.file i{width:13px;height:13px;border-radius:50%;background:var(--doux)}
+.file i.moi{background:var(--accent);animation:batt 1.2s infinite}
+@keyframes batt{50%{transform:scale(1.5)}}
+.gros{width:100%;padding:19px;border-radius:20px;background:var(--accent);color:#fff;font-weight:700;font-size:1.08rem;transition:transform .15s}
+.gros:active{transform:scale(.97)}
+.tour .gros{background:#fff;color:var(--accent)}
+.lien{font-size:.82rem;opacity:.55;text-decoration:underline;align-self:center;padding:6px}
+.comptoir{background:var(--encre);color:#fff;border-radius:22px;padding:18px;display:grid;gap:10px}
+.comptoir h3{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.comptoir div{display:flex;gap:8px}
+.comptoir button{flex:1;padding:14px;border-radius:14px;background:#fff;color:var(--encre);font-weight:700}
+.comptoir button.s{background:none;color:#fff;border:1.5px solid #fff5;flex:none}
+.voile{position:absolute;inset:0;background:#0008;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:var(--fond);color:var(--encre);border-radius:30px 30px 0 0;padding:26px 22px 28px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1)}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet h3{font-family:Fraunces,serif;font-size:1.4rem;margin-bottom:12px}
+.sheet input{width:100%;padding:15px;border-radius:14px;border:2px solid var(--doux);background:#fff;outline:0;margin-bottom:10px;font-size:1.3rem;letter-spacing:.4em;text-align:center}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header><small data-t="metier"></small><h1 data-t="nom"></h1></header>
+  <div class="scroll">
+    <div class="encours"><span>Numéro servi en ce moment</span><b id="servi"></b></div>
+    <div id="zone" style="flex:1;display:flex;flex-direction:column"></div>
+    <button class="gros" id="action"></button>
+    <div class="comptoir" id="comptoir" hidden>
+      <h3>Mode comptoir</h3>
+      <div><button id="suivant">Appeler le suivant →</button><button class="s" id="raz">Remettre à zéro</button></div>
+    </div>
+    <button class="lien" id="acces">Je suis le commerçant</button>
+  </div>
+  <div class="voile" id="voile"></div>
+  <div class="sheet"><h3>Code du commerçant</h3><input id="code" type="password" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off"><button class="gros" id="valider">Ouvrir le mode comptoir</button></div>
+</div>
+
+<script>
+const { $, esc, store, toast } = K, C = CONFIG;
+let S = store.get("file", { servi: C.depart.servi, dernier: C.depart.dernier, moi: null }), comptoir = false, prevenu = false, neuf = false;
+
+function rendu(bouge) {
+  const z = $("#zone"), app = $("#app");
+  $("#servi").textContent = S.servi;
+  if (bouge) { $("#servi").classList.remove("bouge"); void $("#servi").offsetWidth; $("#servi").classList.add("bouge"); }
+  const devant = S.moi ? S.moi - S.servi : 0, monTour = S.moi && devant <= 0;
+  app.classList.toggle("tour", !!monTour);
+  if (!S.moi) {
+    const n = S.dernier - S.servi;
+    z.innerHTML = `<div class="vide"><b>${n}</b><p>personne${n > 1 ? "s" : ""} dans la file<br>environ <strong>${n * C.minutesParClient} min</strong> d'attente</p></div>`;
+    $("#action").textContent = "Prendre un ticket";
+  } else if (monTour) {
+    z.innerHTML = `<div class="ticket"><small>Votre numéro</small><div class="num">${S.moi}</div><p><b>C'est à vous !</b></p><div class="trait"></div><p class="info">Présentez-vous au comptoir.</p></div>`;
+    $("#action").textContent = "J'ai été servi";
+    if (!prevenu) { prevenu = true; if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+  } else {
+    const avant = devant - 1;   // sans compter la personne en train d'être servie
+    const pts = Array.from({ length: Math.min(avant, 14) }, () => "<i></i>").join("") + '<i class="moi"></i>';
+    z.innerHTML = `<div class="ticket ${neuf ? "neuf" : ""}"><small>Votre numéro</small><div class="num">${S.moi}</div>
+      <p>${avant ? `<b>${avant}</b> personne${avant > 1 ? "s" : ""} avant vous` : "<b>Vous êtes le prochain</b>"} · environ <b>${devant * C.minutesParClient} min</b></p>
+      <div class="file">${pts}</div><div class="trait"></div><p class="info">Allez faire un tour : l'écran change de couleur quand c'est à vous.</p></div>`;
+    $("#action").textContent = "Rendre mon ticket";
+  }
+  neuf = false;
+  $("#comptoir").hidden = !comptoir;
+  $("#acces").hidden = comptoir;
+  store.set("file", S);
+}
+
+$("#action").onclick = () => {
+  if (!S.moi) { S.dernier++; S.moi = S.dernier; prevenu = false; neuf = true; toast("Ticket n° " + S.moi + " pris !"); }
+  else { if (S.moi > S.servi) toast("Ticket rendu."); S.moi = null; }
+  rendu();
+};
+function avance() { if (S.servi < S.dernier) { S.servi++; rendu(true); } }
+$("#suivant").onclick = () => { if (S.servi >= S.dernier) return toast("Plus personne dans la file."); avance(); };
+$("#raz").onclick = () => { S = { servi: 0, dernier: 0, moi: null }; rendu(true); };
+$("#acces").onclick = () => { $("#code").value = ""; $("#app").classList.add("ouvert"); setTimeout(() => $("#code").focus(), 300); };
+$("#voile").onclick = () => $("#app").classList.remove("ouvert");
+$("#valider").onclick = () => {
+  if ($("#code").value !== String(C.codeCommercant)) return toast("Code incorrect");
+  comptoir = true; $("#app").classList.remove("ouvert"); rendu();
+};
+
+// Mode démo : la file avance seule, et de nouveaux clients arrivent de temps en temps
+if (C.demo) setInterval(() => {
+  if (comptoir) return;
+  if (S.moi && S.servi >= S.moi) return;
+  if (!S.moi && S.dernier - S.servi < 3) S.dernier += 2;
+  avance();
+}, C.demoSecondes * 1000);
+
+rendu();
+</script>
+</body>
+</html>

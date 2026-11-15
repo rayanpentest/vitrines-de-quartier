@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fffdf7">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Guide du quartier</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#fffdf7;--encre:#1c1b29;--accent:#6c3bff;--doux:#f0ebff;--ext:#1c1b29}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #0b0a14,0 40px 90px -20px #000a}}
+header{padding:30px 20px 10px}
+header small{font-size:.76rem;font-weight:600;opacity:.6}
+h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:3rem;line-height:.95}
+h1 em{color:var(--accent)}
+.cherche{display:flex;align-items:center;gap:10px;margin-top:14px;background:#fff;border:2px solid var(--doux);border-radius:18px;padding:0 14px;transition:.2s}
+.cherche:focus-within{border-color:var(--accent)}
+.cherche input{flex:1;border:0;outline:0;background:none;padding:14px 0;min-width:0}
+.puces{display:flex;gap:8px;overflow-x:auto;padding:8px 20px 12px;scrollbar-width:none;flex:none}
+.puces button{white-space:nowrap;padding:9px 15px;border-radius:99px;background:var(--doux);font-weight:600;font-size:.85rem;transition:.2s}
+.puces button.on{background:var(--encre);color:#fff}
+.puces button.o::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#2fbf71;margin-right:7px}
+.scroll{flex:1;overflow-y:auto;padding:0 20px 26px;scrollbar-width:none}
+.compte{font-size:.78rem;font-weight:600;opacity:.55;margin:2px 0 10px}
+.fiche{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:12px;border-radius:22px;background:#fff;margin-bottom:10px;box-shadow:0 1px 0 var(--doux);transition:transform .15s}
+.anim .fiche{animation:monte .35s both}
+.fiche:active{transform:scale(.98)}
+@keyframes monte{from{opacity:0;transform:translateY(14px)}}
+.pastille{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:1.7rem;flex:none}
+.fiche div.t{flex:1;min-width:0}
+.fiche b{display:block;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fiche small{font-size:.8rem;opacity:.65}
+.st{font-size:.76rem;font-weight:600;display:flex;align-items:center;gap:6px;margin-top:3px}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:#e5533c}
+.st.ouvert::before{background:#2fbf71}
+.coeur{font-size:1.25rem;width:40px;height:40px;border-radius:50%;flex:none;color:#1c1b2944;transition:transform .2s}
+.coeur.on{color:#ff3b6b;transform:scale(1.2)}
+.cadeau{display:inline-block;font-size:.7rem;font-weight:800;background:var(--accent);color:#fff;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.rien{text-align:center;opacity:.6;padding:50px 20px}
+.voile{position:absolute;inset:0;background:#0008;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:var(--fond);border-radius:30px 30px 0 0;padding:24px 20px 26px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1);max-height:90%;overflow:auto}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet .tete{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.sheet h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:2rem;line-height:1}
+.offre{background:var(--doux);border:1.5px dashed var(--accent);border-radius:16px;padding:12px 14px;font-weight:600;margin:14px 0}
+.offre small{display:block;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.hor{list-style:none;padding:0;margin:14px 0;font-size:.9rem}
+.hor li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--doux)}
+.hor .auj{font-weight:800;color:var(--accent)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions a{padding:15px;border-radius:16px;background:var(--encre);color:#fff;font-weight:800;text-align:center;text-decoration:none}
+.actions a+a{background:var(--accent)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <small data-t="metier"></small>
+    <h1>Mon quartier,<br><em data-t="nom"></em></h1>
+    <label class="cherche">🔎<input id="q" type="search" placeholder="Un commerce, une envie…" autocomplete="off"></label>
+  </header>
+  <div class="puces" id="puces"></div>
+  <div class="scroll"><p class="compte" id="compte"></p><div id="liste"></div></div>
+  <div class="voile" id="voile"></div>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const { $, $$, esc, store } = K, C = CONFIG;
+let filtre = "Tous", favoris = new Set(store.get("favoris", []));
+const sansAccent = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+function rendu(anim = true) {
+  $("#liste").classList.toggle("anim", anim);
+  const cats = ["Tous", "Ouverts", "♥ Favoris", ...Object.keys(C.categories)];
+  $("#puces").innerHTML = cats.map((c) => `<button class="${c === filtre ? "on" : ""} ${c === "Ouverts" ? "o" : ""}">${esc(c)}</button>`).join("");
+  $$("#puces button").forEach((b) => (b.onclick = () => { filtre = b.textContent; rendu(); }));
+  const q = sansAccent($("#q").value.trim());
+  const L = C.commerces.map((c, i) => ({ c, i, e: K.etat(c.horaires) })).filter(({ c, e }) =>
+    (filtre === "Tous" || (filtre === "Ouverts" ? e.ouvert : filtre === "♥ Favoris" ? favoris.has(c.nom) : c.cat === filtre)) &&
+    (!q || sansAccent(c.nom + " " + c.cat + " " + c.desc).includes(q)));
+  L.sort((a, b) => b.e.ouvert - a.e.ouvert);
+  $("#compte").textContent = L.length + " commerce" + (L.length > 1 ? "s" : "") + " · " + L.filter((x) => x.e.ouvert).length + " ouvert" + (L.filter((x) => x.e.ouvert).length > 1 ? "s" : "") + " maintenant";
+  $("#liste").innerHTML = L.length ? L.map(({ c, i, e }, n) => `<div class="fiche" data-i="${i}" role="button" tabindex="0" style="animation-delay:${n * 35}ms">
+      <span class="pastille" style="background:${esc(C.categories[c.cat] || "var(--doux)")}">${esc(c.emoji)}</span>
+      <div class="t"><b>${esc(c.nom)}${c.offre ? '<span class="cadeau">Offre</span>' : ""}</b><small>${esc(c.cat)} · ${esc(c.adresse)}</small><span class="st ${e.ouvert ? "ouvert" : ""}">${e.txt}</span></div>
+      <button class="coeur ${favoris.has(c.nom) ? "on" : ""}" data-n="${esc(c.nom)}" aria-label="Favori">♥</button></div>`).join("")
+    : `<p class="rien">Aucun commerce ne correspond.<br>Essayez un autre mot ou une autre catégorie.</p>`;
+}
+$("#liste").onclick = (e) => {
+  const coeur = e.target.closest(".coeur");
+  if (coeur) { const n = coeur.dataset.n; favoris.has(n) ? favoris.delete(n) : favoris.add(n); store.set("favoris", [...favoris]); return rendu(false); }
+  const f = e.target.closest(".fiche"); if (f) detail(C.commerces[f.dataset.i]);
+};
+function detail(c) {
+  const e = K.etat(c.horaires);
+  $("#sheet").innerHTML = `<div class="tete"><span class="pastille" style="background:${esc(C.categories[c.cat] || "var(--doux)")}">${esc(c.emoji)}</span><div><h2>${esc(c.nom)}</h2><span class="st ${e.ouvert ? "ouvert" : ""}">${e.txt}</span></div></div>
+    <p>${esc(c.desc)}</p><p style="opacity:.65;margin-top:6px">📍 ${esc(c.adresse)}</p>
+    ${c.offre ? `<div class="offre"><small>Offre habitants du quartier</small>${esc(c.offre)}</div>` : ""}
+    <ul class="hor">${K.horairesHTML(c.horaires)}</ul>
+    <div class="actions"><a href="tel:${esc(c.tel.replace(/\s/g, ""))}">Appeler</a><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.nom + " " + c.adresse + " " + C.ville)}">Itinéraire</a></div>`;
+  $("#app").classList.add("ouvert");
+}
+$("#voile").onclick = () => $("#app").classList.remove("ouvert");
+$("#q").oninput = () => rendu(false);
+rendu();
+</script>
+</body>
+</html>

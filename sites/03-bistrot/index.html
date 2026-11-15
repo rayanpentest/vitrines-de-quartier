@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bistrot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Caveat:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f4ecdf;--encre:#1f2a24;--accent:#b3402a;--carte:#fffaf0}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.6;transition:background 1s,color 1s;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;font-weight:500}
+/* halo de bougie, visible le soir */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 80% 12%,color-mix(in srgb,var(--accent) 34%,transparent),transparent 46%);opacity:0;transition:opacity 1.2s;z-index:0}
+[data-ambiance=soir] body::before{opacity:1;animation:bougie 4s ease-in-out infinite}
+@keyframes bougie{50%{opacity:.72}}
+body>*{position:relative;z-index:1}
+.top{display:flex;align-items:center;gap:18px;padding:18px clamp(16px,5vw,60px);flex-wrap:wrap}
+.logo{font-family:"Playfair Display",serif;font-style:italic;font-size:1.6rem;margin-right:auto}
+.etat{font-size:.8rem;font-weight:600}
+.etat::before{content:"●";margin-right:6px;color:#c0392b}.etat.ouvert::before{color:#3fae62}
+.bascule{font:inherit;font-size:.8rem;font-weight:600;border:1.5px solid var(--encre);background:none;color:inherit;border-radius:99px;padding:8px 14px;cursor:pointer;transition:.2s}
+.bascule:hover{background:var(--encre);color:var(--fond)}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(24px,5vw,70px);align-items:center;padding:clamp(30px,6vw,90px) clamp(16px,5vw,60px) clamp(50px,8vw,110px)}
+.sur{font-size:.78rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-size:clamp(2.7rem,7.4vw,6.4rem);line-height:1.02;letter-spacing:-.02em;margin:18px 0 24px}
+h1 em{color:var(--accent)}
+.hero p.i{max-width:46ch;font-size:1.1rem;opacity:.85}
+.btn{display:inline-block;margin:28px 12px 0 0;padding:15px 26px;border-radius:6px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;transition:transform .2s}
+.btn:hover{transform:translateY(-3px)}
+.btn.alt{background:none;color:var(--encre);border:1.5px solid var(--encre)}
+/* l'ardoise écrite à la craie */
+.ardoise{background:#22302a;color:#f5f1e6;font-family:Caveat,cursive;padding:34px 30px 30px;border:12px solid #8b5e3c;border-radius:6px;transform:rotate(2.2deg);box-shadow:0 30px 60px -20px #0008;transition:transform .5s}
+.ardoise:hover{transform:rotate(0) scale(1.02)}
+.ardoise h2{font-family:Caveat,cursive;font-size:2.3rem;font-weight:700;text-decoration:underline wavy #f5f1e688 2px;text-underline-offset:8px;margin-bottom:18px}
+.ardoise li{font-size:1.65rem;line-height:1.25;margin-bottom:12px;list-style:"~  "}
+.ardoise ul{padding-left:26px}
+.ardoise b{display:block;margin-top:20px;font-size:1.4rem;color:#ffd58a;text-wrap:balance}
+@media(max-width:820px){.hero{grid-template-columns:1fr}.ardoise{max-width:420px}}
+.carte{background:var(--carte);padding:clamp(40px,7vw,90px) clamp(16px,5vw,60px);transition:background 1s}
+h2.t{font-size:clamp(2.2rem,5vw,3.8rem);font-style:italic;text-align:center}
+.onglets{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:28px 0 36px}
+.onglets button{font:inherit;font-weight:600;background:none;color:inherit;border:0;border-bottom:2px solid transparent;padding:8px 16px;cursor:pointer;opacity:.55;transition:.2s}
+.onglets button.on{opacity:1;border-color:var(--accent);color:var(--accent)}
+.plats{max-width:720px;margin:auto;list-style:none;padding:0;min-height:260px}
+.plats li{display:flex;align-items:baseline;gap:12px;padding:15px 0;font-family:"Playfair Display",serif;font-size:1.25rem;animation:monte .5s both}
+.plats li::after{content:"";order:1;flex:1;border-bottom:1.5px dotted currentColor;opacity:.4}
+.plats li b{order:2;color:var(--accent);font-weight:500;white-space:nowrap}
+@keyframes monte{from{opacity:0;transform:translateY(14px)}}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:44px;padding:clamp(40px,7vw,90px) clamp(16px,5vw,60px)}
+.infos h2{font-size:2.2rem;font-style:italic;margin-bottom:16px}
+.hor{list-style:none;padding:0}
+.hor li{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid color-mix(in srgb,var(--encre) 16%,transparent);font-size:.95rem}
+.hor .auj{color:var(--accent);font-weight:600}
+footer{padding:28px;text-align:center;font-size:.82rem;opacity:.65}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="logo" data-t="nom"></span>
+  <span class="etat" data-etat></span>
+  <button class="bascule" id="bascule"></button>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="sur" id="sur"></p>
+    <h1 id="h1"></h1>
+    <p class="i" data-t="intro"></p>
+    <a class="btn" data-href="tel">Réserver une table</a><a class="btn alt" href="#carte">Voir la carte</a>
+  </div>
+  <aside class="ardoise" id="ardoise"></aside>
+</section>
+
+<section class="carte" id="carte">
+  <h2 class="t rv">La carte</h2>
+  <div class="onglets" id="onglets"></div>
+  <ul class="plats" id="plats"></ul>
+</section>
+
+<section class="infos">
+  <div class="rv"><h2>Les services</h2><ul class="hor" data-horaires></ul></div>
+  <div class="rv"><h2>Venir</h2><p data-t="adresse"></p>
+    <a class="btn" data-href="tel" data-t="telephone"></a><a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire</a></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, $$, esc, euro } = K, C = CONFIG, racine = document.documentElement;
+
+// Ambiance midi / soir : automatique selon l'heure, ou au clic
+function ambiance(a) {
+  Object.entries(C.couleurs[a]).forEach(([k, v]) => racine.style.setProperty("--" + k, v));
+  racine.dataset.ambiance = a;
+  $("#bascule").textContent = a === "soir" ? "☀ Ambiance midi" : "🕯 Ambiance soir";
+  $("#sur").textContent = C.metier + (a === "soir" ? " · service du soir" : " · service du midi");
+}
+const h = new Date().getHours();
+ambiance(h >= C.heureDuSoir || h < 5 ? "soir" : "midi");
+$("#bascule").onclick = () => ambiance(racine.dataset.ambiance === "soir" ? "midi" : "soir");
+
+const [debut, fin] = C.accroche.split(", ");
+$("#h1").innerHTML = esc(debut) + (fin ? ", <em>" + esc(fin) + "</em>" : "");
+
+const A = C.ardoise;
+$("#ardoise").innerHTML = `<h2>${esc(A.titre)}</h2><ul>${A.lignes.map((l) => `<li>${esc(l)}</li>`).join("")}</ul><b>${esc(A.prix)}</b>`;
+
+const cats = Object.keys(C.carte);
+function montre(c) {
+  $("#onglets").innerHTML = cats.map((x) => `<button class="${x === c ? "on" : ""}">${esc(x)}</button>`).join("");
+  $("#plats").innerHTML = C.carte[c].map((p, i) => `<li style="animation-delay:${i * 70}ms"><span>${esc(p.nom)}</span><b>${euro(p.prix)}</b></li>`).join("");
+  $$("#onglets button").forEach((b) => (b.onclick = () => montre(b.textContent)));
+}
+montre(cats[1] || cats[0]);
+</script>
+</body>
+</html>

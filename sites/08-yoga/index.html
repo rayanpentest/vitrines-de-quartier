@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Studio de yoga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f4efe8;--encre:#2f2a3a;--accent:#8a6fd1;--doux:#e4dcf5;--sable:#e9dcc6}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Karla,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.65;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,.logo{font-family:Marcellus,Georgia,serif;font-weight:400;line-height:1.05}
+.top{position:absolute;inset:0 0 auto;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:22px clamp(16px,5vw,56px)}
+.logo{font-size:1.4rem;letter-spacing:.06em}
+.etat{font-size:.8rem;letter-spacing:.06em}
+.etat::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#d98c8c;margin-right:8px}
+.etat.ouvert::before{background:#7fc79a}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center;padding:110px 20px 70px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 46%,var(--doux),transparent 62%),linear-gradient(var(--fond),var(--sable))}
+/* le cercle qui guide la respiration */
+.souffle{position:absolute;inset:0;margin:auto;place-self:center;translate:0 -4%;width:min(74vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--doux) 55%,var(--accent) 130%);opacity:.75;transform:scale(.6);filter:blur(1px)}
+.souffle::before,.souffle::after{content:"";position:absolute;inset:-7%;border-radius:50%;border:1px solid var(--accent);opacity:.35}
+.souffle::after{inset:-15%;opacity:.16}
+.hero>div{position:relative;max-width:660px}
+.consigne{font-size:.82rem;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);font-weight:700;min-height:1.6em;transition:opacity .6s}
+h1{font-size:clamp(2.8rem,8vw,6rem);margin:18px 0 22px}
+.hero p.i{font-size:1.1rem;max-width:50ch;margin:auto}
+.btn{display:inline-block;margin:28px 6px 0;padding:14px 28px;border-radius:99px;background:var(--encre);color:var(--fond);text-decoration:none;font-weight:700;letter-spacing:.03em;transition:.3s}
+.btn:hover{background:var(--accent);transform:translateY(-2px)}
+.btn.alt{background:none;color:var(--encre);border:1px solid var(--encre)}
+section.b{padding:clamp(50px,8vw,110px) clamp(16px,5vw,56px);max-width:1100px;margin:auto}
+h2{font-size:clamp(2rem,5vw,3.4rem);text-align:center;margin-bottom:10px}
+.sous{text-align:center;opacity:.7;margin-bottom:30px}
+.jours{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+.jours button{font:inherit;font-weight:700;background:none;border:1px solid transparent;color:inherit;padding:8px 16px;border-radius:99px;cursor:pointer;transition:.25s}
+.jours button:hover{border-color:var(--accent)}
+.jours button.on{background:var(--accent);color:#fff}
+.cours{list-style:none;padding:0;display:grid;gap:10px;min-height:250px;align-content:start}
+.cours li{display:grid;grid-template-columns:90px 1fr auto;gap:16px;align-items:center;background:#fff;border-radius:20px;padding:18px 22px;animation:glisse .5s both}
+.cours time{font-family:Marcellus,serif;font-size:1.6rem;color:var(--accent)}
+.cours h3{font-size:1.25rem}.cours small{opacity:.65}
+.cours a{font-weight:700;font-size:.85rem;text-decoration:none;border-bottom:2px solid var(--accent);white-space:nowrap}
+@keyframes glisse{from{opacity:0;transform:translateX(-18px)}}
+.tarifs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:center}
+.tarifs article{text-align:center;padding:36px 24px;border-radius:200px 200px 26px 26px;background:var(--sable);transition:transform .4s}
+.tarifs article:hover{transform:translateY(-8px)}
+.tarifs article.phare{background:var(--encre);color:var(--fond);padding-block:54px}
+.tarifs b{font-family:Marcellus,serif;font-size:3.2rem;font-weight:400;display:block;margin:10px 0}
+.tarifs .phare b{color:var(--doux)}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:44px}
+.infos h2{text-align:left;font-size:2.2rem;margin-bottom:16px}
+.hor{list-style:none;padding:0}
+.hor li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #2f2a3a1c}
+.hor .auj{color:var(--accent);font-weight:700}
+footer{padding:28px;text-align:center;font-size:.82rem;opacity:.6}
+@media(max-width:560px){.cours li{grid-template-columns:70px 1fr}.cours a{grid-column:2}}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo" data-t="nom"></span><span class="etat" data-etat></span></header>
+
+<section class="hero">
+  <div class="souffle" id="souffle" aria-hidden="true"></div>
+  <div>
+    <p class="consigne" id="consigne" aria-live="off"></p>
+    <h1 data-t="accroche"></h1>
+    <p class="i" data-t="intro"></p>
+    <a class="btn" href="#planning">Voir le planning</a><a class="btn alt" id="essai" target="_blank" rel="noopener">Réserver un essai</a>
+  </div>
+</section>
+
+<section class="b" id="planning">
+  <h2 class="rv">Le planning</h2><p class="sous" data-t="metier"></p>
+  <div class="jours" id="jours"></div>
+  <ul class="cours" id="cours"></ul>
+</section>
+
+<section class="b"><h2 class="rv">Les formules</h2><p class="sous">Tapis et thé fournis.</p><div class="tarifs" id="tarifs"></div></section>
+
+<section class="b infos">
+  <div class="rv"><h2>Horaires du studio</h2><ul class="hor" data-horaires></ul></div>
+  <div class="rv"><h2>Nous rejoindre</h2><p data-t="adresse"></p><a class="btn" data-href="tel" data-t="telephone" style="margin-left:0"></a><a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire</a></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, $$, esc, euro, fh, wa, JOURS } = K, C = CONFIG;
+$("#essai").href = wa(`Bonjour ${C.nom}, je souhaite réserver un cours d'essai.`);
+
+// Cercle de respiration : grandit à l'inspiration, rétrécit à l'expiration
+const cercle = $("#souffle"), R = C.respiration;
+function respire(inspire) {
+  const s = inspire ? R.inspire : R.expire;
+  cercle.style.transition = `transform ${s}s ease-in-out`;
+  cercle.style.transform = `scale(${inspire ? 1 : 0.6})`;
+  $("#consigne").textContent = inspire ? "Inspirez…" : "Expirez…";
+  setTimeout(() => respire(!inspire), s * 1000);
+}
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) $("#consigne").textContent = C.metier;
+else setTimeout(() => respire(true), 400);
+
+// Planning par jour (commence au jour d'aujourd'hui)
+const auj = new Date().getDay();
+function jour(j) {
+  $("#jours").innerHTML = [1, 2, 3, 4, 5, 6, 0].map((i) => `<button data-j="${i}" class="${i === j ? "on" : ""}">${JOURS[i].slice(0, 3)}${i === auj ? " ·" : ""}</button>`).join("");
+  $$("#jours button").forEach((b) => (b.onclick = () => jour(+b.dataset.j)));
+  const liste = C.planning[j] || [];
+  $("#cours").innerHTML = liste.length
+    ? liste.map((c, n) => `<li style="animation-delay:${n * 80}ms"><time>${fh(c.h)}</time><div><h3>${esc(c.nom)}</h3><small>${esc(c.prof)} · ${esc(c.niveau)}</small></div><a target="_blank" rel="noopener" href="${wa(`Bonjour, je voudrais réserver « ${c.nom} » ${JOURS[j].toLowerCase()} à ${fh(c.h)}.`)}">Réserver</a></li>`).join("")
+    : "<li>Pas de cours ce jour-là — le studio se repose.</li>";
+}
+jour(auj);
+
+$("#tarifs").innerHTML = C.tarifs.map((t) => `<article class="rv ${t.phare ? "phare" : ""}"><h3>${esc(t.nom)}</h3><b>${euro(t.prix)}</b><p>${esc(t.detail)}</p></article>`).join("");
+</script>
+</body>
+</html>

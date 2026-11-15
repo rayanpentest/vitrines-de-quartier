@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plombier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f3f7fb;--encre:#0b2545;--accent:#ff5a1f;--bleu:#1769ff;--doux:#dce8f7}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.5;overflow-x:hidden;padding-bottom:76px}
+a{color:inherit}
+h1,h2,h3{font-stretch:80%;font-weight:900;line-height:.98;letter-spacing:-.01em}
+.top{display:flex;align-items:center;gap:14px;padding:16px clamp(16px,5vw,56px)}
+.logo{font-weight:900;font-size:1.5rem;font-stretch:80%;margin-right:auto;display:flex;align-items:center;gap:8px}
+.logo::before{content:"";width:18px;height:24px;background:var(--bleu);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;transform:rotate(180deg)}
+.etat{font-size:.8rem;font-weight:700;padding:7px 13px;border-radius:8px;background:var(--doux)}
+.etat.ouvert{background:#d6f5df;color:#12693a}
+.appel{font-weight:800;text-decoration:none;background:var(--accent);color:#fff;padding:10px 18px;border-radius:10px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,56px);padding:clamp(16px,4vw,50px) clamp(16px,5vw,56px) clamp(50px,7vw,90px);align-items:start}
+h1{font-size:clamp(2.5rem,6.2vw,5.4rem)}
+h1 em{font-style:normal;color:var(--bleu)}
+.hero p.i{font-size:1.12rem;margin:22px 0;max-width:46ch}
+.zones{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.zones span{font-size:.82rem;font-weight:600;background:#fff;border:1.5px solid var(--doux);padding:6px 12px;border-radius:99px}
+/* le diagnostic */
+.diag{background:#fff;border-radius:28px;padding:clamp(20px,3vw,34px);box-shadow:0 30px 70px -30px #0b254555;border:1.5px solid var(--doux);min-height:440px;display:flex;flex-direction:column}
+.etapes{display:flex;gap:6px;margin-bottom:22px}
+.etapes i{flex:1;height:6px;border-radius:9px;background:var(--doux);transition:.4s}
+.etapes i.fait{background:var(--bleu)}
+.diag h2{font-size:1.7rem;margin-bottom:18px}
+.choix{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;animation:arrive .4s both}
+.choix.large{grid-template-columns:1fr}
+.choix button{font:inherit;font-weight:700;text-align:left;background:var(--fond);border:2px solid transparent;border-radius:16px;padding:16px;cursor:pointer;color:inherit;transition:.15s;display:flex;flex-direction:column;gap:6px}
+.choix.large button{flex-direction:row;align-items:center;justify-content:space-between}
+.choix button:hover{border-color:var(--bleu);background:#fff;transform:translateY(-2px)}
+.choix button span{font-size:1.9rem}
+.choix button small{font-weight:500;opacity:.65}
+@keyframes arrive{from{opacity:0;transform:translateX(24px)}}
+.resultat{animation:arrive .4s both;display:flex;flex-direction:column;gap:14px;flex:1}
+.niveau{display:inline-flex;align-self:start;font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 12px;border-radius:8px;background:#d6f5df;color:#12693a}
+.niveau.n2{background:#fff0c9;color:#8a5a00}.niveau.n3{background:#ffdcd0;color:#b3300a;animation:alerte 1s infinite}
+@keyframes alerte{50%{opacity:.55}}
+.geste{background:var(--doux);border-left:5px solid var(--bleu);border-radius:10px;padding:14px 16px;font-weight:500}
+.geste b{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--bleu);margin-bottom:4px}
+.fourchette{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;font-stretch:80%;line-height:1}
+.fourchette small{display:block;font-size:.85rem;font-weight:500;font-stretch:100%;opacity:.65;margin-top:6px}
+.btn{display:inline-block;font:inherit;font-weight:800;padding:15px 22px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none;border:0;cursor:pointer;text-align:center;transition:.15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px -8px var(--accent)}
+.btn.alt{background:var(--encre)}
+.lien{background:none;border:0;font:inherit;color:var(--bleu);font-weight:700;cursor:pointer;margin-top:auto;align-self:start;padding:8px 0}
+.garanties{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2px;background:var(--encre);color:#fff}
+.garanties article{padding:clamp(28px,4vw,48px) clamp(16px,4vw,40px);border-right:1px solid #fff2}
+.garanties h3{font-size:1.6rem;margin-bottom:10px}
+.garanties h3::before{content:"✓";color:var(--accent);margin-right:10px}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;padding:clamp(44px,7vw,90px) clamp(16px,5vw,56px)}
+.infos h2{font-size:2.2rem;margin-bottom:16px}
+.hor{list-style:none;padding:0}
+.hor li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1.5px solid var(--doux)}
+.hor .auj{color:var(--bleu);font-weight:800}
+footer{padding:24px;text-align:center;font-size:.82rem;opacity:.6}
+.barre{position:fixed;inset:auto 0 0;z-index:9;display:flex;gap:10px;padding:10px clamp(10px,3vw,24px);background:#fffffff0;backdrop-filter:blur(10px);border-top:1.5px solid var(--doux)}
+.barre a{flex:1}
+@media(max-width:860px){.hero{grid-template-columns:1fr}.top .appel{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo" data-t="nom"></span><span class="etat" data-etat></span><a class="appel" data-href="tel" data-t="telephone"></a></header>
+
+<section class="hero">
+  <div>
+    <h1 id="h1"></h1>
+    <p class="i" data-t="intro"></p>
+    <strong>Nous intervenons à :</strong>
+    <div class="zones" id="zones"></div>
+  </div>
+  <div class="diag" id="diag" aria-live="polite"></div>
+</section>
+
+<section class="garanties" id="garanties"></section>
+
+<section class="infos">
+  <div class="rv"><h2>Horaires d'intervention</h2><ul class="hor" data-horaires></ul></div>
+  <div class="rv"><h2>Contact</h2><p data-t="adresse"></p><p style="margin-top:18px"><a class="btn alt" data-href="maps" target="_blank" rel="noopener">Voir sur la carte</a></p></div>
+</section>
+<footer data-copy></footer>
+
+<nav class="barre"><a class="btn" data-href="tel">📞 Appeler maintenant</a><a class="btn alt" id="waBarre" target="_blank" rel="noopener">WhatsApp</a></nav>
+
+<script>
+const { $, $$, esc, wa } = K, C = CONFIG;
+const virg = C.accroche.split(", ");
+$("#h1").innerHTML = esc(virg[0]) + (virg[1] ? ", <em>" + esc(virg[1]) + "</em>" : "");
+$("#zones").innerHTML = C.zones.map((z) => `<span>${esc(z)}</span>`).join("");
+$("#garanties").innerHTML = C.garanties.map((g) => `<article class="rv"><h3>${esc(g.titre)}</h3><p>${esc(g.texte)}</p></article>`).join("");
+$("#waBarre").href = wa(`Bonjour ${C.nom}, j'ai besoin d'un plombier.`);
+
+// Diagnostic en 3 étapes
+let pb = null, gr = null;
+const barre = (n) => `<div class="etapes">${[1, 2, 3].map((i) => `<i class="${i <= n ? "fait" : ""}"></i>`).join("")}</div>`;
+function etape1() {
+  pb = gr = null;
+  $("#diag").innerHTML = barre(1) + `<h2>1. Quel est le problème ?</h2><div class="choix">${C.problemes.map((p, i) => `<button data-i="${i}"><span>${esc(p.emoji)}</span>${esc(p.nom)}</button>`).join("")}</div>`;
+  $$("#diag .choix button").forEach((b) => (b.onclick = () => { pb = C.problemes[b.dataset.i]; etape2(); }));
+}
+function etape2() {
+  $("#diag").innerHTML = barre(2) + `<h2>2. C'est urgent ?</h2><div class="choix large">${C.gravites.map((g, i) => `<button data-i="${i}">${esc(g.nom)}<small>${esc(g.detail)}</small></button>`).join("")}</div><button class="lien" id="retour">← Changer de problème</button>`;
+  $$("#diag .choix button").forEach((b) => (b.onclick = () => { gr = C.gravites[b.dataset.i]; etape3(); }));
+  $("#retour").onclick = etape1;
+}
+function etape3() {
+  const r = (n) => Math.round((n * gr.coef) / 5) * 5, bas = r(pb.prix[0]), haut = r(pb.prix[1]);
+  const msg = `Bonjour ${C.nom}. Problème : ${pb.nom}. Urgence : ${gr.nom}. Estimation vue sur le site : ${bas}–${haut} €. Pouvez-vous intervenir ?`;
+  $("#diag").innerHTML = barre(3) + `<div class="resultat">
+    <span class="niveau n${gr.niveau}">${esc(pb.nom)} · intervention ${esc(gr.delai)}</span>
+    <div class="geste"><b>Le bon geste tout de suite</b>${esc(pb.geste)}</div>
+    <div class="fourchette">${bas} – ${haut} €<small>Fourchette indicative, déplacement inclus. Devis ferme gratuit sur place.</small></div>
+    <a class="btn" href="${K.tel()}">📞 Appeler le ${esc(C.telephone)}</a>
+    <a class="btn alt" target="_blank" rel="noopener" href="${wa(msg)}">Envoyer ce diagnostic par WhatsApp</a>
+    <button class="lien" id="retour">← Refaire le diagnostic</button></div>`;
+  $("#retour").onclick = etape1;
+}
+etape1();
+</script>
+</body>
+</html>

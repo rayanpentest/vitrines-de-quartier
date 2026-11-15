@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barbier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#0c0c0c;--encre:#f2f2ea;--accent:#c8ff2e}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"Space Mono",monospace;background:var(--fond);color:var(--encre);line-height:1.5;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,.gros{font-family:Anton,Impact,sans-serif;text-transform:uppercase;font-weight:400;line-height:.9}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px clamp(14px,4vw,40px);border-bottom:2px solid var(--encre);font-size:.8rem;text-transform:uppercase}
+.etat{padding:5px 10px;border:2px solid var(--encre)}
+.etat.ouvert{background:var(--accent);color:#000;border-color:var(--accent)}
+.hero{display:grid;grid-template-columns:1fr auto;min-height:78vh;border-bottom:2px solid var(--encre)}
+.hero>div{padding:clamp(20px,4vw,48px);display:flex;flex-direction:column;justify-content:space-between;gap:30px;min-width:0}
+h1{font-size:clamp(4.4rem,21vw,19rem);letter-spacing:-.01em;margin-left:-.04em}
+h1 span{display:block}
+h1 span:last-child{color:var(--accent)}
+.sous{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
+.sous p{max-width:44ch}
+.sous strong{display:block;font-size:1.2rem;margin-bottom:10px;color:var(--accent)}
+/* L'enseigne de barbier qui tourne */
+.poteau{width:clamp(34px,6vw,84px);border-left:2px solid var(--encre);background:repeating-linear-gradient(-45deg,var(--accent) 0 26px,var(--fond) 26px 52px,var(--encre) 52px 78px,var(--fond) 78px 104px);background-size:100% 147px;animation:poteau 2.2s linear infinite}
+@keyframes poteau{to{background-position:0 147px}}
+.bande{overflow:hidden;border-bottom:2px solid var(--encre);background:var(--accent);color:#000;padding:10px 0;white-space:nowrap}
+.bande div{display:inline-block;animation:defile 22s linear infinite}
+.bande span{font-family:Anton,sans-serif;font-size:clamp(1.6rem,4vw,3rem);margin:0 22px}
+.bande span::after{content:"✂";margin-left:44px}
+@keyframes defile{to{transform:translateX(-50%)}}
+section{border-bottom:2px solid var(--encre)}
+.tete{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:clamp(20px,4vw,48px) clamp(14px,4vw,40px) 18px;flex-wrap:wrap}
+h2{font-size:clamp(2.6rem,8vw,6.5rem)}
+.tete small{text-transform:uppercase;font-size:.78rem;opacity:.7}
+.ligne{display:grid;grid-template-columns:auto 1fr auto;gap:8px 24px;align-items:center;padding:20px clamp(14px,4vw,40px);border-top:2px solid var(--encre);transition:background .2s,color .2s,padding .25s;cursor:default}
+.ligne i{font-style:normal;font-size:.8rem;opacity:.6}
+.ligne h3{font-size:clamp(1.8rem,5vw,4rem)}
+.ligne p{grid-column:2;font-size:.85rem;max-height:0;overflow:hidden;opacity:0;transition:.3s}
+.ligne b{font-family:Anton,sans-serif;font-size:clamp(1.8rem,5vw,4rem);font-weight:400;grid-row:1;grid-column:3}
+.ligne:hover{background:var(--accent);color:#000;padding-left:clamp(28px,7vw,90px)}
+.ligne:hover p{max-height:60px;opacity:1}
+.creneaux{display:flex;flex-wrap:wrap;gap:12px;padding:10px clamp(14px,4vw,40px) clamp(28px,5vw,56px)}
+.creneaux a,.creneaux em{font-family:Anton,sans-serif;font-style:normal;font-size:1.7rem;padding:10px 22px;border:2px solid var(--encre);text-decoration:none;transition:.15s}
+.creneaux a:hover{background:var(--accent);color:#000;border-color:var(--accent);transform:translate(-4px,-4px);box-shadow:4px 4px 0 var(--encre)}
+.equipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.equipe article{padding:28px clamp(14px,4vw,40px);border-top:2px solid var(--encre);border-right:2px solid var(--encre);position:relative;overflow:hidden;min-height:230px;display:flex;flex-direction:column;justify-content:end}
+.equipe article::before{content:attr(data-l);position:absolute;right:-10px;top:-40px;font-family:Anton,sans-serif;font-size:15rem;line-height:1;color:transparent;-webkit-text-stroke:2px var(--encre);opacity:.35;transition:.3s}
+.equipe article:hover::before{color:var(--accent);opacity:1;-webkit-text-stroke-color:var(--accent)}
+.equipe h3{font-size:2.2rem;position:relative}
+.equipe p{font-size:.8rem;text-transform:uppercase;position:relative}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.infos>div{padding:clamp(20px,4vw,48px) clamp(14px,4vw,40px)}
+.infos>div+div{border-left:2px solid var(--encre)}
+.hor{list-style:none;padding:0;margin-top:18px}
+.hor li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #fff3;text-transform:uppercase;font-size:.85rem}
+.hor .auj{color:var(--accent)}
+.btn{display:inline-block;margin:20px 12px 0 0;padding:14px 22px;background:var(--accent);color:#000;font-weight:700;text-decoration:none;text-transform:uppercase;border:2px solid var(--accent)}
+.btn.alt{background:none;color:var(--encre);border-color:var(--encre)}
+.btn:hover{transform:translate(-3px,-3px);box-shadow:3px 3px 0 var(--encre)}
+footer{padding:22px clamp(14px,4vw,40px);font-size:.75rem;text-transform:uppercase;opacity:.6}
+@media(max-width:640px){.infos>div+div{border-left:0;border-top:2px solid var(--encre)}}
+</style>
+</head>
+<body>
+<header class="top"><span data-t="metier"></span><span class="etat" data-etat></span></header>
+
+<section class="hero">
+  <div>
+    <h1 id="h1"></h1>
+    <div class="sous"><p><strong data-t="accroche"></strong><span data-t="intro"></span></p><a class="btn" href="#creneaux">Prendre un créneau ↓</a></div>
+  </div>
+  <div class="poteau" aria-hidden="true"></div>
+</section>
+
+<div class="bande" aria-hidden="true"><div id="bande"></div></div>
+
+<section>
+  <div class="tete"><h2>Tarifs</h2><small>Survolez pour le détail</small></div>
+  <div id="prestas"></div>
+</section>
+
+<section id="creneaux">
+  <div class="tete"><h2>Créneaux<br>du jour</h2><small>Un clic = message WhatsApp pré-rempli</small></div>
+  <div class="creneaux" id="slots"></div>
+</section>
+
+<section>
+  <div class="tete"><h2>L'équipe</h2></div>
+  <div class="equipe" id="equipe"></div>
+</section>
+
+<section class="infos">
+  <div><h2>Horaires</h2><ul class="hor" data-horaires></ul></div>
+  <div><h2>Adresse</h2><p data-t="adresse" style="margin-top:18px"></p>
+    <a class="btn" data-href="tel" data-t="telephone"></a><a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire</a></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, esc, euro, fh, min, plages, wa } = K, C = CONFIG;
+$("#h1").innerHTML = C.nom.split(" ").map((w) => `<span>${esc(w)}</span>`).join("");
+$("#bande").innerHTML = [...C.defilant, ...C.defilant, ...C.defilant, ...C.defilant].map((t) => `<span>${esc(t)}</span>`).join("");
+$("#prestas").innerHTML = C.prestations.map((p, i) => `<div class="ligne"><i>0${i + 1}</i><h3>${esc(p.nom)}</h3><b>${euro(p.prix)}</b><p>${esc(p.desc)} — ${esc(p.duree)}</p></div>`).join("");
+$("#equipe").innerHTML = C.equipe.map((e) => `<article data-l="${esc(e.nom[0])}"><h3>${esc(e.nom)}</h3><p>${esc(e.role)}</p></article>`).join("");
+
+// Prochains créneaux de 30 min d'aujourd'hui, calculés d'après les horaires
+const d = new Date(), now = d.getHours() * 60 + d.getMinutes(), slots = [];
+for (const [a, b] of plages(C.horaires[d.getDay()]))
+  for (let t = Math.max(min(a), Math.ceil((now + 15) / 30) * 30); t + 30 <= min(b) && slots.length < 8; t += 30) slots.push(t);
+const txt = (t) => String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+$("#slots").innerHTML = slots.length
+  ? slots.map((t) => `<a href="${wa(`Bonjour ${C.nom}, je voudrais le créneau de ${fh(txt(t))} aujourd'hui. Merci !`)}" target="_blank" rel="noopener">${fh(txt(t))}</a>`).join("")
+  : `<em>Plus de créneau aujourd'hui</em><a href="${wa(`Bonjour ${C.nom}, quel est votre prochain créneau disponible ?`)}" target="_blank" rel="noopener">Demander le prochain →</a>`;
+</script>
+</body>
+</html>

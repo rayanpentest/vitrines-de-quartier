@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catalogue · sites & apps pour commerces de quartier</title>
+<meta name="description" content="20 modèles de sites et d'applications pour les commerces de quartier.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* ═══ Votre marque : changez le nom, le contact et les couleurs ici et tout en bas (objet STUDIO) ═══ */
+:root{--fond:#0f0e17;--encre:#fffffe;--gris:#a7a9be;--accent:#ff8906;--carte:#1b1a27}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.55;overflow-x:hidden}
+a{color:inherit}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px clamp(16px,5vw,64px)}
+.logo{font-weight:800;font-size:1.1rem}
+.logo::before{content:"●";color:var(--accent);margin-right:8px}
+.btn{display:inline-block;padding:12px 22px;border-radius:99px;background:var(--accent);color:#0f0e17;font-weight:800;text-decoration:none;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px -10px var(--accent)}
+.hero{padding:clamp(40px,8vw,110px) clamp(16px,5vw,64px) clamp(30px,5vw,60px);max-width:1100px}
+h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:clamp(2.8rem,8vw,6.6rem);line-height:.96;letter-spacing:-.01em}
+h1 em{color:var(--accent)}
+.hero p{color:var(--gris);font-size:1.15rem;max-width:56ch;margin:24px 0 28px}
+.filtres{display:flex;gap:8px;padding:0 clamp(16px,5vw,64px) 22px;flex-wrap:wrap}
+.filtres button{font:inherit;font-weight:600;color:var(--gris);background:var(--carte);border:1.5px solid transparent;padding:10px 18px;border-radius:99px;cursor:pointer;transition:.2s}
+.filtres button.on{color:var(--fond);background:var(--encre)}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:22px;padding:0 clamp(16px,5vw,64px) 80px}
+.fiche{background:var(--carte);border-radius:24px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s;border:1px solid #ffffff10}
+.fiche:hover{transform:translateY(-6px);box-shadow:0 30px 60px -30px #000}
+.apercu{position:relative;aspect-ratio:16/10;overflow:hidden;background:#000}
+.apercu iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none}
+.fiche.app .apercu{aspect-ratio:16/10;display:grid;place-items:center;background:radial-gradient(circle at 50% 0,#34324a,#14131f)}
+.fiche.app .tel{position:relative;height:88%;aspect-ratio:390/760;border-radius:16px;overflow:hidden;box-shadow:0 0 0 4px #000,0 14px 30px #0008}
+.fiche.app iframe{width:390px;height:760px}
+.txt{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.txt small{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.txt h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:1.7rem;line-height:1.05}
+.txt p{color:var(--gris);font-size:.92rem;flex:1}
+.txt span{font-weight:800;font-size:.88rem;margin-top:8px}
+.txt span::after{content:" →";transition:.2s;display:inline-block}
+.fiche:hover .txt span::after{transform:translateX(5px)}
+footer{padding:40px clamp(16px,5vw,64px);border-top:1px solid #ffffff14;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;color:var(--gris)}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo" id="marque"></span><a class="btn" id="contact1">Me contacter</a></header>
+
+<section class="hero">
+  <h1>Des sites et des apps qui donnent envie de <em>pousser la porte.</em></h1>
+  <p id="pitch"></p>
+  <a class="btn" href="#catalogue">Voir les 20 modèles ↓</a>
+</section>
+
+<div class="filtres" id="catalogue">
+  <button class="on" data-f="tout">Tout</button><button data-f="site">Sites vitrines</button><button data-f="app">Applications</button>
+</div>
+<main class="grille" id="grille"></main>
+
+<footer><span id="pied"></span><a class="btn" id="contact2">Demander un devis</a></footer>
+
+<script>
+/* ═══ VOS INFOS ═══ */
+const STUDIO = {
+  nom: "Votre Studio",
+  email: "contact@votre-studio.fr",
+  pitch: "Je crée des sites et des applications sur mesure pour les commerçants et artisans du quartier. Choisissez un modèle : je l'adapte à vos couleurs, vos textes et vos horaires en quelques jours.",
+};
+
+const MODELES = [
+  ["site", "sites/01-boulangerie", "Boulangerie", "Maison Levain", "Affiche en direct la fournée qui sort du four selon l'heure."],
+  ["site", "sites/02-barbier", "Barbier · coiffeur", "Coupe Court", "Style affiche brute, créneaux du jour réservables en un clic."],
+  ["site", "sites/03-bistrot", "Restaurant · bistrot", "Chez Margaux", "Passe tout seul en ambiance « soir » et affiche l'ardoise du jour."],
+  ["site", "sites/04-fleuriste", "Fleuriste", "Pétale", "Le client compose son bouquet à l'écran et l'envoie en commande."],
+  ["site", "sites/05-garage", "Garage · auto", "Atelier Moteur 9", "Devis en direct avec un compteur qui monte selon les prestations."],
+  ["site", "sites/06-cafe", "Café · coffee shop", "Kawa Club", "Une tasse se remplit au fur et à mesure qu'on fait défiler la page."],
+  ["site", "sites/07-primeur", "Primeur · épicerie", "Le Panier de Saison", "Une roue des mois montre les fruits et légumes de saison."],
+  ["site", "sites/08-yoga", "Yoga · bien-être", "Studio Souffle", "Un cercle guide la respiration dès l'arrivée, planning par jour."],
+  ["site", "sites/09-plombier", "Plombier · artisan", "Allô Fuite", "Diagnostic en 3 clics : bon geste, fourchette de prix, appel."],
+  ["site", "sites/10-institut", "Institut de beauté", "Éclat", "Effet verre dépoli, lumière qui suit le doigt, sélecteur de soin."],
+  ["app", "apps/01-fidelite", "Carte de fidélité", "Kawa Club", "Carte à tampons validée par le code du commerçant. Code démo : 1234."],
+  ["app", "apps/02-click-collect", "Click & collect", "Le Panier de Saison", "Panier, créneau de retrait, commande envoyée par WhatsApp."],
+  ["app", "apps/03-rendez-vous", "Prise de rendez-vous", "Coupe Court", "Prestation, jour, heure : un ticket de rendez-vous en 4 écrans."],
+  ["app", "apps/04-menu-qr", "Menu par QR code", "Chez Margaux", "Carte bilingue, filtres végétarien / sans gluten, numéro de table."],
+  ["app", "apps/05-devis-express", "Devis instantané", "Atelier Couleur", "Le prix se calcule en direct pendant que le client règle la surface."],
+  ["app", "apps/06-file-attente", "File d'attente", "Boucherie Martin", "Ticket virtuel : l'écran change de couleur quand c'est votre tour."],
+  ["app", "apps/07-planning-cours", "Réservation de cours", "Forme & Co", "Planning de la semaine, places restantes, mes réservations."],
+  ["app", "apps/08-roue-cadeaux", "Roue des cadeaux", "Kawa Club", "Un tour par jour, des codes promo à montrer en caisse."],
+  ["app", "apps/09-lookbook-swipe", "Lookbook à swiper", "Indigo", "On fait glisser les pièces : à droite, c'est un coup de cœur."],
+  ["app", "apps/10-guide-quartier", "Guide du quartier", "Les Lilas", "Tous les commerces, qui est ouvert maintenant, offres habitants."],
+];
+
+document.getElementById("marque").textContent = STUDIO.nom;
+document.getElementById("pitch").textContent = STUDIO.pitch;
+document.getElementById("pied").textContent = "© " + new Date().getFullYear() + " " + STUDIO.nom + " · Modèles de démonstration, commerces fictifs.";
+["contact1", "contact2"].forEach((id) => (document.getElementById(id).href = "mailto:" + STUDIO.email + "?subject=" + encodeURIComponent("Demande de devis")));
+
+const grille = document.getElementById("grille");
+grille.innerHTML = MODELES.map(([type, url, metier, nom, desc]) => `
+  <a class="fiche ${type}" data-type="${type}" href="${url}/index.html" target="_blank" rel="noopener">
+    <div class="apercu">${type === "app" ? '<div class="tel">' : ""}<iframe loading="lazy" src="${url}/index.html" title="Aperçu ${nom}" tabindex="-1" aria-hidden="true"></iframe>${type === "app" ? "</div>" : ""}</div>
+    <div class="txt"><small>${type === "app" ? "Application" : "Site vitrine"} · ${metier}</small><h2>${nom}</h2><p>${desc}</p><span>Ouvrir la démo</span></div>
+  </a>`).join("");
+
+// Les aperçus sont de vraies pages réduites à la taille de la carte
+function echelle() {
+  document.querySelectorAll(".apercu").forEach((a) => {
+    const f = a.querySelector("iframe"), tel = a.querySelector(".tel");
+    f.style.transform = "scale(" + (tel ? tel.clientWidth / 390 : a.clientWidth / 1280) + ")";
+  });
+}
+echelle(); addEventListener("resize", echelle);
+
+document.querySelectorAll(".filtres button").forEach((b) => (b.onclick = () => {
+  document.querySelectorAll(".filtres button").forEach((x) => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".fiche").forEach((f) => (f.hidden = b.dataset.f !== "tout" && f.dataset.type !== b.dataset.f));
+  echelle();
+}));
+</script>
+<style>[hidden]{display:none!important}</style>
+</body>
+</html>

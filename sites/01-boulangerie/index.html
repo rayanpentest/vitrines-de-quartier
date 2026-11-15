@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Boulangerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f6efe3;--encre:#2a1d12;--accent:#c8752d;--doux:#ead9bf}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.55;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,.logo{font-family:Fraunces,Georgia,serif}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:22px;padding:14px clamp(16px,5vw,64px);background:color-mix(in srgb,var(--fond) 82%,transparent);backdrop-filter:blur(12px)}
+.logo{font-weight:800;font-size:1.35rem;text-decoration:none;margin-right:auto}
+nav{display:flex;gap:22px}nav a{text-decoration:none;font-weight:500;font-size:.95rem}nav a:hover{color:var(--accent)}
+.etat{font-size:.78rem;font-weight:700;padding:7px 13px;border-radius:99px;background:var(--encre);color:var(--fond);white-space:nowrap}
+.etat::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:#e5533c}
+.etat.ouvert::before{background:#58d07a;box-shadow:0 0 0 4px #58d07a44}
+.hero{position:relative;padding:clamp(48px,9vw,120px) clamp(16px,5vw,64px) 60px;min-height:82vh}
+.sur{text-transform:uppercase;letter-spacing:.22em;font-size:.78rem;font-weight:700;color:var(--accent)}
+h1{font-size:clamp(3rem,11vw,9.5rem);line-height:.92;font-weight:400;letter-spacing:-.03em;margin:18px 0 28px;max-width:11ch}
+h1 em{color:var(--accent);font-weight:300}
+.intro{max-width:44ch;font-size:1.15rem}
+.live{display:inline-flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:34px;padding:14px 20px;background:var(--encre);color:var(--fond);border-radius:18px;max-width:100%}
+.live b{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px}
+.live b::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25;transform:scale(1.7)}}
+.badge{position:absolute;right:clamp(10px,7vw,110px);top:clamp(90px,16vw,170px);width:clamp(140px,24vw,300px);aspect-ratio:1}
+.badge svg{width:100%;height:100%;animation:tourne 26s linear infinite}
+.badge text{font:700 13px "DM Sans",sans-serif;letter-spacing:.22em;fill:var(--encre)}
+.badge i{position:absolute;inset:24%;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-style:normal;font-size:clamp(2rem,6vw,4.4rem)}
+@keyframes tourne{to{transform:rotate(360deg)}}
+@media(max-width:760px){nav{display:none}.badge{position:relative;right:auto;top:auto;margin:36px 0 0 auto}}
+section{padding:clamp(48px,8vw,110px) clamp(16px,5vw,64px)}
+h2{font-size:clamp(2rem,5vw,3.8rem);font-weight:400;letter-spacing:-.02em;line-height:1;margin-bottom:12px}
+h2 em{color:var(--accent)}
+.fournees{background:var(--doux);border-radius:44px 44px 0 0}
+.rail{list-style:none;padding:34px 0 10px;display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.rail li{flex:0 0 min(270px,74vw);scroll-snap-align:start;background:var(--fond);border-radius:26px;padding:22px;position:relative;transition:transform .3s}
+.rail li:hover{transform:translateY(-6px)}
+.rail time{font-family:Fraunces,serif;font-size:2.6rem;font-style:italic;display:block;line-height:1}
+.rail h3{font-size:1.2rem;margin:14px 0 6px;font-weight:600}
+.rail p{font-size:.92rem;opacity:.75}
+.rail .passe{opacity:.5}
+.rail .encours{background:var(--encre);color:var(--fond);transform:rotate(-1.5deg)}
+.rail .encours::after{content:"Tout chaud";position:absolute;top:-12px;right:16px;background:var(--accent);color:#fff;font-size:.72rem;font-weight:700;padding:5px 11px;border-radius:99px;letter-spacing:.06em}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;margin-top:38px}
+.carte{border:1.5px solid var(--encre);border-radius:28px;padding:16px;background:var(--fond);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.carte:nth-child(odd){transform:rotate(-1deg)}.carte:nth-child(even){transform:rotate(1.2deg)}
+.carte:hover{transform:rotate(0) translateY(-8px);box-shadow:8px 8px 0 var(--encre)}
+.vis{aspect-ratio:4/3;border-radius:18px;display:grid;place-items:center;font-size:4.6rem;overflow:hidden}
+.vis img{width:100%;height:100%;object-fit:cover}
+.carte h3{font-size:1.35rem;margin-top:14px;display:flex;justify-content:space-between;gap:10px;font-weight:600}
+.carte h3 b{color:var(--accent);font-style:italic;font-weight:500;white-space:nowrap}
+.carte p{font-size:.92rem;opacity:.75}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px;background:var(--encre);color:var(--fond);border-radius:44px;margin:0 clamp(8px,2vw,24px)}
+.hor{list-style:none;padding:0;margin-top:20px}
+.hor li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed color-mix(in srgb,var(--fond) 30%,transparent)}
+.hor .auj{color:var(--accent);font-weight:700}
+.btn{display:inline-block;margin:18px 10px 0 0;padding:14px 24px;border-radius:99px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;transition:transform .2s}
+.btn:hover{transform:scale(1.05)}
+.btn.alt{background:none;border:1.5px solid var(--fond);color:var(--fond)}
+footer{padding:34px;text-align:center;font-size:.85rem;opacity:.7}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="logo" href="#" data-t="nom"></a>
+  <nav><a href="#fournees">Les fournées</a><a href="#vitrine">La vitrine</a><a href="#infos">Infos</a></nav>
+  <span class="etat" data-etat></span>
+</header>
+
+<section class="hero">
+  <p class="sur" data-t="metier"></p>
+  <h1 id="h1"></h1>
+  <p class="intro" data-t="intro"></p>
+  <div class="live"><b>En ce moment</b><span id="live"></span></div>
+  <div class="badge">
+    <svg viewBox="0 0 200 200"><path id="cercle" d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" fill="none"/><text><textPath href="#cercle" id="badge"></textPath></text></svg>
+    <i>🥖</i>
+  </div>
+</section>
+
+<section class="fournees" id="fournees">
+  <h2 class="rv">Les fournées <em>du jour</em></h2>
+  <p class="rv">Venez à la bonne heure : voici ce qui sort du four, et quand.</p>
+  <ul class="rail" id="rail"></ul>
+</section>
+
+<section id="vitrine">
+  <h2 class="rv">Dans <em>la vitrine</em></h2>
+  <div class="grille" id="grille"></div>
+</section>
+
+<section class="infos" id="infos">
+  <div class="rv"><h2>Horaires</h2><ul class="hor" data-horaires></ul></div>
+  <div class="rv"><h2>Passez nous voir</h2><p data-t="adresse" style="margin-top:20px;font-size:1.15rem"></p>
+    <a class="btn" data-href="tel" data-t="telephone"></a><a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire →</a></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, esc, euro, fh, min, visuel } = K, C = CONFIG;
+const mots = C.accroche.split(" "), dernier = mots.pop();
+$("#h1").innerHTML = esc(mots.join(" ")) + " <em>" + esc(dernier) + "</em>";
+$("#badge").textContent = C.badge.repeat(2);
+
+// Fournée en cours selon l'heure
+const d = new Date(), m = d.getHours() * 60 + d.getMinutes(), F = C.fournees;
+let cur = -1; F.forEach((f, i) => { if (min(f.h) <= m) cur = i; });
+const suiv = F[cur + 1];
+$("#live").innerHTML = (cur >= 0 ? `Sorti du four à ${fh(F[cur].h)} : <strong>${esc(F[cur].nom)}</strong>` : "Le four chauffe…")
+  + (suiv ? ` · prochaine fournée à ${fh(suiv.h)}` : "");
+$("#rail").innerHTML = F.map((f, i) => `<li class="${i < cur ? "passe" : i === cur ? "encours" : ""}"><time>${fh(f.h)}</time><h3>${esc(f.nom)}</h3><p>${esc(f.note)}</p></li>`).join("");
+const enCours = $("#rail .encours"); if (enCours) $("#rail").scrollLeft = enCours.offsetLeft - 80;
+
+$("#grille").innerHTML = C.produits.map((p) => `<article class="carte"><div class="vis" style="background:${esc(p.couleur || "var(--doux)")}">${visuel(p)}</div><h3>${esc(p.nom)} <b>${euro(p.prix)}</b></h3><p>${esc(p.desc)}</p></article>`).join("");
+</script>
+</body>
+</html>

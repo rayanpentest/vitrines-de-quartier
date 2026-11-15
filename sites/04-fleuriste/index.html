@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fleuriste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#fbf3ef;--encre:#27312a;--accent:#d9577a;--doux:#e9efe2}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Jost,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px clamp(16px,5vw,60px)}
+.logo{font-family:"Cormorant Garamond",serif;font-size:2rem;font-style:italic}
+.logo::after{content:"✿";color:var(--accent);margin-left:6px;font-style:normal;font-size:1.2rem}
+.etat{font-size:.82rem;padding:7px 14px;border-radius:99px;background:var(--doux)}
+.etat.ouvert{background:var(--accent);color:#fff}
+.atelier{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,60px);padding:clamp(10px,3vw,40px) clamp(16px,5vw,60px) clamp(50px,7vw,100px);align-items:center}
+h1{font-size:clamp(2.6rem,6.4vw,5.6rem);line-height:1;letter-spacing:-.01em}
+h1 em{color:var(--accent)}
+.intro{margin:22px 0 26px;max-width:46ch;font-size:1.08rem}
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.palette button{font:inherit;text-align:left;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid transparent;border-radius:18px;padding:8px 12px 8px 8px;cursor:pointer;color:inherit;transition:.2s;box-shadow:0 2px 10px #0000000a}
+.palette button:hover{border-color:var(--accent);transform:translateY(-3px)}
+.palette button:active{transform:scale(.95)}
+.palette svg{width:44px;height:44px;flex:none}
+.palette b{display:block;font-weight:500;line-height:1.2}
+.palette small{opacity:.6}
+.vase{position:relative;background:var(--doux);border-radius:50% 50% 36px 36px/38% 38% 36px 36px;padding:10px 10px 0;overflow:hidden}
+.vase svg{display:block;width:100%;height:auto}
+.vide{position:absolute;inset:26% 0 auto;text-align:center;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;opacity:.5;pointer-events:none;transition:.3s}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1) both;transform-box:fill-box;transform-origin:center}
+@keyframes pop{from{transform:scale(0) rotate(-80deg)}}
+.tige{stroke-dasharray:400;animation:pousse .7s ease-out both}
+@keyframes pousse{from{stroke-dashoffset:400}to{stroke-dashoffset:0}}
+.total{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:22px}
+.total strong{font-family:"Cormorant Garamond",serif;font-size:2.4rem;font-weight:500;margin-right:auto}
+.total small{display:block;font-family:Jost,sans-serif;font-size:.8rem;opacity:.6}
+.btn{display:inline-block;font:inherit;font-weight:500;padding:13px 24px;border-radius:99px;background:var(--accent);color:#fff;text-decoration:none;border:0;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--accent)}
+.btn.alt{background:none;color:var(--encre);border:1.5px solid var(--encre)}
+.btn[aria-disabled=true]{opacity:.35;pointer-events:none}
+@media(max-width:860px){.atelier{grid-template-columns:1fr}.vase{order:-1;max-width:440px;margin:auto;width:100%}}
+.services{background:var(--encre);color:var(--fond);padding:clamp(44px,7vw,90px) clamp(16px,5vw,60px);display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:34px}
+.services h3{font-size:2rem;font-style:italic;color:var(--accent);margin-bottom:8px}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:44px;padding:clamp(44px,7vw,90px) clamp(16px,5vw,60px)}
+.infos h2{font-size:2.6rem;font-style:italic;margin-bottom:14px}
+.hor{list-style:none;padding:0}
+.hor li{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #0001}
+.hor .auj{color:var(--accent);font-weight:600}
+footer{padding:28px;text-align:center;font-size:.82rem;opacity:.6}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo" data-t="nom"></span><span class="etat" data-etat></span></header>
+
+<section class="atelier">
+  <div>
+    <h1 id="h1"></h1>
+    <p class="intro" data-t="intro"></p>
+    <div class="palette" id="palette"></div>
+    <div class="total">
+      <strong><span id="prix">0 €</span><small id="detail">Bouquet vide</small></strong>
+      <button class="btn alt" id="retirer">↶ Retirer</button>
+      <a class="btn" id="commander" target="_blank" rel="noopener" aria-disabled="true">Commander ce bouquet</a>
+    </div>
+  </div>
+  <div class="vase">
+    <p class="vide" id="vide">Votre bouquet apparaîtra ici…</p>
+    <svg viewBox="0 0 400 500" aria-label="Aperçu du bouquet">
+      <g id="tiges" fill="none" stroke="#5d8a55" stroke-width="3" stroke-linecap="round"></g>
+      <g id="fleurs"></g>
+      <path d="M150 372 h100 l16 128 h-132 z" fill="var(--accent)" opacity=".92"/>
+      <path d="M150 372 h100" stroke="#fff" stroke-width="5" opacity=".5"/>
+    </svg>
+  </div>
+</section>
+
+<section class="services" id="services"></section>
+
+<section class="infos">
+  <div class="rv"><h2>Horaires</h2><ul class="hor" data-horaires></ul></div>
+  <div class="rv"><h2>La boutique</h2><p data-t="adresse"></p><p style="margin-top:18px">
+    <a class="btn" data-href="tel" data-t="telephone"></a> <a class="btn alt" data-href="maps" target="_blank" rel="noopener">Itinéraire</a></p></div>
+</section>
+<footer data-copy></footer>
+
+<script>
+const { $, $$, esc, euro, wa } = K, C = CONFIG;
+const [a, b] = C.accroche.split(", ");
+$("#h1").innerHTML = esc(a) + (b ? ",<br><em>" + esc(b) + "</em>" : "");
+
+// Dessine une fleur en SVG : des pétales (ellipses) autour d'un cœur
+function fleur(f, t = 1) {
+  let p = "";
+  for (let i = 0; i < f.petales; i++)
+    p += `<ellipse cx="0" cy="${-17 * t}" rx="${17 * t * f.forme}" ry="${17 * t}" fill="${f.couleur}" stroke="#0000001f" stroke-width=".6" transform="rotate(${(360 / f.petales) * i})"/>`;
+  return p + `<circle r="${8 * t}" fill="${f.coeur}"/>`;
+}
+$("#palette").innerHTML = C.fleurs.map((f, i) =>
+  `<button data-i="${i}" aria-label="Ajouter ${esc(f.nom)}"><svg viewBox="-36 -36 72 72">${fleur(f)}</svg><span><b>${esc(f.nom)}</b><small>${euro(f.prix)}</small></span></button>`).join("");
+
+const bouquet = []; // { i, x, y, t, r }
+function dessine(nouveau) {
+  $("#tiges").innerHTML = bouquet.map((o, n) => `<path class="${n === bouquet.length - 1 && nouveau ? "tige" : ""}" d="M200 380 Q ${200 + (o.x - 200) * 0.25} ${o.y + 130} ${o.x} ${o.y}"/>`).join("");
+  $("#fleurs").innerHTML = bouquet.map((o, n) => `<g transform="translate(${o.x} ${o.y})"><g class="${n === bouquet.length - 1 && nouveau ? "pop" : ""}" transform="rotate(${o.r})">${fleur(C.fleurs[o.i], o.t)}</g></g>`).join("");
+  const n = bouquet.length, total = bouquet.reduce((s, o) => s + C.fleurs[o.i].prix, 0) + (n ? C.emballage : 0);
+  $("#vide").style.opacity = n ? 0 : 0.5;
+  $("#prix").textContent = euro(total);
+  $("#detail").textContent = n ? `${n} fleur${n > 1 ? "s" : ""} + emballage` : "Bouquet vide";
+  const compte = {}; bouquet.forEach((o) => (compte[C.fleurs[o.i].nom] = (compte[C.fleurs[o.i].nom] || 0) + 1));
+  const liste = Object.entries(compte).map(([k, v]) => `${v} × ${k}`).join(", ");
+  const lien = $("#commander");
+  lien.setAttribute("aria-disabled", !n);
+  lien.href = wa(`Bonjour ${C.nom}, je voudrais ce bouquet : ${liste}. Total estimé : ${euro(total)}.`);
+}
+$$("#palette button").forEach((btn) => (btn.onclick = () => {
+  if (bouquet.length >= 24) return K.toast("Le vase est plein !");
+  const angle = Math.random() * Math.PI, rayon = 40 + Math.random() * 120;   // éventail au-dessus du vase
+  bouquet.push({ i: +btn.dataset.i, x: 200 + Math.cos(angle) * rayon * 1.05, y: 210 - Math.sin(angle) * rayon, t: 1.25 + Math.random() * 0.6, r: Math.random() * 40 });
+  dessine(true);
+}));
+$("#retirer").onclick = () => { bouquet.pop(); dessine(false); };
+dessine(false);
+
+$("#services").innerHTML = C.services.map((s) => `<article class="rv"><h3>${esc(s.titre)}</h3><p>${esc(s.texte)}</p></article>`).join("");
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3efe9">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Lookbook</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f3efe9;--encre:#17171c;--accent:#3b3bff;--coeur:#ff3b6b;--ext:#17171c}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Inter,system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #000,0 40px 90px -20px #000a}}
+header{padding:30px 22px 10px;display:flex;justify-content:space-between;align-items:end;gap:10px}
+header small{font-size:.74rem;font-weight:600;opacity:.6}
+h1{font-family:Syne,sans-serif;font-weight:800;font-size:2.2rem;line-height:.95;letter-spacing:-.03em}
+.onglets{display:flex;background:#17171c12;border-radius:99px;padding:4px;font-size:.82rem;font-weight:600}
+.onglets button{padding:8px 13px;border-radius:99px}
+.onglets button.on{background:var(--encre);color:#fff}
+.vue{flex:1;display:flex;flex-direction:column;min-height:0}
+.vue[hidden]{display:none}
+.pile{flex:1;position:relative;margin:8px 22px 0;min-height:0}
+.carte{position:absolute;inset:0;border-radius:30px;overflow:hidden;display:flex;flex-direction:column;justify-content:end;color:#fff;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;box-shadow:0 22px 44px -22px #000a;will-change:transform}
+.carte.dessous{transform:scale(.94) translateY(16px);filter:brightness(.9)}
+.carte.retour{transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
+.carte.part{transition:transform .32s ease-in,opacity .32s}
+.carte .vis{position:absolute;inset:0;display:grid;place-items:center;font-size:9rem}
+.carte .vis img{width:100%;height:100%;object-fit:cover}
+.carte .txt{position:relative;padding:60px 22px 22px;background:linear-gradient(transparent,#000a)}
+.carte h2{font-family:Syne,sans-serif;font-weight:800;font-size:1.7rem;line-height:1.05}
+.carte p{font-size:.9rem;opacity:.9;margin-top:4px}
+.carte .prix{position:absolute;top:18px;right:18px;background:#fff;color:var(--encre);font-family:Syne,sans-serif;font-weight:800;padding:8px 14px;border-radius:99px}
+.tampon{position:absolute;top:26px;left:20px;font-family:Syne,sans-serif;font-weight:800;font-size:1.5rem;padding:6px 14px;border:4px solid;border-radius:12px;opacity:0;transform:rotate(-14deg);text-transform:uppercase}
+.tampon.oui{color:#fff;background:var(--coeur);border-color:var(--coeur)}
+.tampon.non{left:auto;right:20px;top:74px;transform:rotate(14deg);color:#fff;border-color:#fff}
+.fin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:30px}
+.fin b{font-family:Syne,sans-serif;font-size:1.6rem;font-weight:800}
+.fin button,.cta{padding:14px 22px;border-radius:99px;background:var(--encre);color:#fff;font-weight:600;text-decoration:none;text-align:center}
+.boutons{display:flex;justify-content:center;gap:22px;padding:18px 0 24px}
+.boutons button{width:66px;height:66px;border-radius:50%;background:#fff;font-size:1.6rem;box-shadow:0 10px 20px -10px #0006;transition:transform .15s}
+.boutons button:active{transform:scale(.88)}
+.boutons .oui{background:var(--coeur);color:#fff;width:78px;height:78px;font-size:2rem}
+.liste{flex:1;overflow-y:auto;padding:8px 22px 20px;scrollbar-width:none}
+.ligne{display:flex;align-items:center;gap:14px;background:#fff;border-radius:20px;padding:10px;margin-bottom:10px}
+.ligne .mini{width:62px;height:74px;border-radius:14px;display:grid;place-items:center;font-size:2rem;flex:none;overflow:hidden}
+.ligne .mini img{width:100%;height:100%;object-fit:cover}
+.ligne div.t{flex:1}.ligne b{display:block;font-family:Syne,sans-serif;font-weight:700}
+.ligne small{opacity:.6}
+.ligne button{width:36px;height:36px;border-radius:50%;background:var(--fond)}
+.pied{padding:0 22px 24px;display:grid}
+.videL{text-align:center;opacity:.6;padding:60px 20px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div><small data-t="metier"></small><h1 data-t="nom"></h1></div>
+    <div class="onglets"><button id="oDec" class="on">Découvrir</button><button id="oFav">♥ <span id="nb">0</span></button></div>
+  </header>
+  <section class="vue" id="vDec">
+    <div class="pile" id="pile"></div>
+    <div class="boutons"><button id="non" aria-label="Passer">✕</button><button class="oui" id="oui" aria-label="J'aime">♥</button></div>
+  </section>
+  <section class="vue" id="vFav" hidden>
+    <div class="liste" id="liste"></div>
+    <div class="pied"><a class="cta" id="essayer" target="_blank" rel="noopener">Réserver un essayage en boutique</a></div>
+  </section>
+</div>
+
+<script>
+const { $, esc, euro, wa, store } = K, C = CONFIG, P = C.pieces;
+let i = Math.min(store.get("i", 0), P.length), favoris = store.get("favoris", []).filter((n) => P.some((p) => p.nom === n));
+const degrade = (p) => `linear-gradient(160deg,${p.fond[0]},${p.fond[1]})`;
+const carte = (p, dessous) => `<article class="carte ${dessous ? "dessous" : ""}" style="background:${degrade(p)}">
+  <div class="vis">${K.visuel(p)}</div><span class="prix">${euro(p.prix)}</span>
+  <span class="tampon oui">J'adore</span><span class="tampon non">Suivant</span>
+  <div class="txt"><h2>${esc(p.nom)}</h2><p>${esc(p.note)}</p><p>${esc(p.tailles)}</p></div></article>`;
+
+function pile() {
+  store.set("i", i); store.set("favoris", favoris);
+  $("#nb").textContent = favoris.length;
+  if (i >= P.length) {
+    $("#pile").innerHTML = `<div class="fin"><b>Vous avez tout vu !</b><p>${favoris.length} coup${favoris.length > 1 ? "s" : ""} de cœur dans votre sélection.</p><button id="encore">Revoir la collection</button></div>`;
+    $("#encore").onclick = () => { i = 0; pile(); };
+    return;
+  }
+  $("#pile").innerHTML = (P[i + 1] ? carte(P[i + 1], true) : "") + carte(P[i]);
+  glisser($("#pile").lastElementChild);
+}
+
+// Glisser la carte du dessus : à droite = j'aime, à gauche = suivant
+function glisser(el) {
+  let x0 = null, dx = 0;
+  el.onpointerdown = (e) => { x0 = e.clientX; dx = 0; el.classList.remove("retour"); el.setPointerCapture(e.pointerId); };
+  el.onpointermove = (e) => {
+    if (x0 === null) return;
+    dx = e.clientX - x0;
+    el.style.transform = `translateX(${dx}px) rotate(${dx / 16}deg)`;
+    el.querySelector(".oui").style.opacity = Math.max(0, Math.min(dx / 90, 1));
+    el.querySelector(".non").style.opacity = Math.max(0, Math.min(-dx / 90, 1));
+  };
+  el.onpointerup = el.onpointercancel = () => {
+    if (x0 === null) return;
+    x0 = null;
+    if (Math.abs(dx) > 90) return decide(dx > 0);
+    el.classList.add("retour"); el.style.transform = "";
+    el.querySelectorAll(".tampon").forEach((t) => (t.style.opacity = 0));
+  };
+}
+let occupe = false;
+function decide(aime) {
+  const el = $("#pile .carte:last-child");
+  if (!el || occupe || i >= P.length) return;
+  occupe = true;
+  el.classList.add("part");
+  el.querySelector(aime ? ".oui" : ".non").style.opacity = 1;
+  el.style.transform = `translateX(${aime ? 520 : -520}px) rotate(${aime ? 26 : -26}deg)`;
+  el.style.opacity = 0;
+  if (aime && !favoris.includes(P[i].nom)) { favoris.push(P[i].nom); if (navigator.vibrate) navigator.vibrate(30); }
+  setTimeout(() => { i++; occupe = false; pile(); }, 300);
+}
+$("#oui").onclick = () => decide(true);
+$("#non").onclick = () => decide(false);
+
+function liste() {
+  const F = P.filter((p) => favoris.includes(p.nom));
+  $("#liste").innerHTML = F.length
+    ? F.map((p) => `<div class="ligne"><div class="mini" style="background:${degrade(p)}">${K.visuel(p)}</div><div class="t"><b>${esc(p.nom)}</b><small>${euro(p.prix)} · ${esc(p.tailles)}</small></div><button data-n="${esc(p.nom)}" aria-label="Retirer">✕</button></div>`).join("")
+    : `<p class="videL">Aucun coup de cœur pour l'instant.<br>Faites glisser les pièces vers la droite !</p>`;
+  $("#liste").querySelectorAll("button").forEach((b) => (b.onclick = () => { favoris = favoris.filter((n) => n !== b.dataset.n); store.set("favoris", favoris); $("#nb").textContent = favoris.length; liste(); }));
+  $("#essayer").hidden = !F.length;
+  $("#essayer").href = wa(`Bonjour ${C.nom}, j'aimerais essayer : ${F.map((p) => p.nom).join(", ")}. Quand puis-je passer ?`);
+}
+function vue(fav) {
+  $("#vDec").hidden = fav; $("#vFav").hidden = !fav;
+  $("#oDec").classList.toggle("on", !fav); $("#oFav").classList.toggle("on", fav);
+  fav ? liste() : pile();
+}
+$("#oDec").onclick = () => vue(false);
+$("#oFav").onclick = () => vue(true);
+pile();
+</script>
+</body>
+</html>

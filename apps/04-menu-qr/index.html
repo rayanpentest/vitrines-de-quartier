@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4ecdf">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Menu</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f4ecdf;--encre:#1f2a24;--accent:#b3402a;--carte:#fffaf0;--ext:#1f2a24}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Inter,system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #0f1512,0 40px 90px -20px #000a}}
+header{padding:30px 20px 12px;display:flex;align-items:end;gap:12px}
+header>div:first-child{flex:1}
+header small{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:2rem;line-height:1.05}
+.langue{display:flex;border:1.5px solid var(--encre);border-radius:99px;overflow:hidden;font-size:.78rem;font-weight:600}
+.langue button{padding:7px 11px}.langue button.on{background:var(--encre);color:var(--fond)}
+.barres{flex:none}
+.rail{display:flex;gap:8px;overflow-x:auto;padding:4px 20px 10px;scrollbar-width:none}
+.rail button{white-space:nowrap;padding:8px 14px;border-radius:99px;font-size:.85rem;font-weight:600;transition:.2s}
+.cats button{font-family:"Playfair Display",serif;font-size:1.05rem;border-radius:0;padding:6px 2px;margin-right:12px;border-bottom:2px solid transparent;opacity:.5}
+.cats button.on{opacity:1;border-color:var(--accent);color:var(--accent)}
+.filtres button{background:var(--carte);border:1.5px solid transparent}
+.filtres button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.scroll{flex:1;overflow-y:auto;padding:0 20px 110px;scrollbar-width:none;scroll-behavior:smooth}
+h2{font-family:"Playfair Display",serif;font-style:italic;font-weight:500;font-size:1.7rem;margin:20px 0 8px}
+.plat{display:flex;gap:12px;align-items:start;width:100%;text-align:left;background:var(--carte);border-radius:18px;padding:16px;margin-bottom:10px;transition:opacity .3s,transform .2s}
+.plat:active{transform:scale(.98)}
+.plat.hors{opacity:.25}
+.plat div{flex:1;min-width:0}
+.plat b{font-family:"Playfair Display",serif;font-weight:700;font-size:1.08rem;line-height:1.2;display:block}
+.plat small{display:block;margin-top:5px;font-size:.95rem;letter-spacing:.1em}
+.plat em{font-style:normal;font-weight:600;color:var(--accent);white-space:nowrap}
+.plat i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:none;place-items:center;font-size:.8rem;font-weight:700;flex:none}
+.plat.choisi i{display:grid}
+.barre{position:absolute;inset:auto 14px 18px;z-index:4;display:flex;justify-content:space-between;padding:16px 20px;border-radius:18px;background:var(--encre);color:var(--fond);font-weight:600;transform:translateY(140%);transition:transform .4s cubic-bezier(.2,1.3,.4,1)}
+.barre.on{transform:none}
+.voile{position:absolute;inset:0;background:#0008;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:var(--carte);border-radius:30px 30px 0 0;padding:26px 22px 28px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1);max-height:88%;overflow:auto}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet h3{font-family:"Playfair Display",serif;font-size:1.6rem;line-height:1.15}
+.sheet .prix{font-size:1.3rem;font-weight:600;color:var(--accent);margin:8px 0 12px}
+.sheet p{line-height:1.6}
+.etiq{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.etiq span{font-size:.8rem;font-weight:600;background:var(--fond);padding:6px 11px;border-radius:99px}
+.all{font-size:.85rem;opacity:.7}
+.cta{display:block;width:100%;margin-top:18px;padding:16px;border-radius:16px;background:var(--accent);color:#fff;font-weight:600}
+.cta.retire{background:none;color:var(--accent);border:1.5px solid var(--accent)}
+.sel{list-style:none;padding:0;margin:14px 0}
+.sel li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed #1f2a2433}
+.sel li.tot{font-weight:600;font-size:1.15rem;border:0}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div><small id="sur"></small><h1 data-t="nom"></h1></div>
+    <div class="langue" id="langue"><button data-l="fr">FR</button><button data-l="en">EN</button></div>
+  </header>
+  <div class="barres"><nav class="rail cats" id="cats"></nav><div class="rail filtres" id="filtres"></div></div>
+  <div class="scroll" id="liste"></div>
+  <button class="barre" id="barre"></button>
+  <div class="voile" id="voile"></div>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const { $, $$, esc, euro, store } = K, C = CONFIG;
+const T = {
+  fr: { carte: "La carte", table: "Table", selection: "Ma sélection", ajouter: "Ajouter à ma sélection", retirer: "Retirer de ma sélection", allergenes: "Allergènes", montrer: "Montrez cet écran à votre serveur pour commander.", total: "Total", fermer: "Fermer", vider: "Tout effacer" },
+  en: { carte: "The menu", table: "Table", selection: "My selection", ajouter: "Add to my selection", retirer: "Remove from my selection", allergenes: "Allergens", montrer: "Show this screen to your waiter to order.", total: "Total", fermer: "Close", vider: "Clear all" },
+};
+let L = store.get("langue", (navigator.language || "fr").startsWith("fr") ? "fr" : "en"), filtres = new Set(), sel = new Set(store.get("sel", []));
+const table = new URLSearchParams(location.search).get("table");
+const PLATS = C.carte.flatMap((c, i) => c.plats.map((p, j) => ({ ...p, id: i + "-" + j })));
+const ouvre = (html) => { $("#sheet").innerHTML = html; $("#app").classList.add("ouvert"); };
+const ferme = () => $("#app").classList.remove("ouvert");
+
+function rendu() {
+  const t = T[L];
+  document.documentElement.lang = L;
+  $("#sur").textContent = t.carte + (table ? " · " + t.table + " " + table : "");
+  $$("#langue button").forEach((b) => b.classList.toggle("on", b.dataset.l === L));
+  $("#cats").innerHTML = C.carte.map((c, i) => `<button data-i="${i}" class="${i ? "" : "on"}">${esc(c[L])}</button>`).join("");
+  $("#filtres").innerHTML = Object.entries(C.tags).map(([k, v]) => `<button data-k="${k}" class="${filtres.has(k) ? "on" : ""}">${v.emoji} ${esc(v[L])}</button>`).join("");
+  $("#liste").innerHTML = C.carte.map((c, i) => `<h2 id="c${i}">${esc(c[L])}</h2>` + c.plats.map((p, j) => {
+    const id = i + "-" + j, ok = [...filtres].every((f) => p.tags.includes(f));
+    return `<button class="plat ${ok ? "" : "hors"} ${sel.has(id) ? "choisi" : ""}" data-id="${id}"><div><b>${esc(p[L])}</b><small>${p.tags.map((k) => C.tags[k]?.emoji || "").join(" ")}</small></div><em>${euro(p.prix)}</em><i>✓</i></button>`;
+  }).join("")).join("");
+  const choisis = PLATS.filter((p) => sel.has(p.id)), total = choisis.reduce((s, p) => s + p.prix, 0);
+  $("#barre").classList.toggle("on", choisis.length > 0);
+  $("#barre").innerHTML = `<span>${t.selection} · ${choisis.length}</span><span>${euro(total)}</span>`;
+  store.set("sel", [...sel]); store.set("langue", L);
+
+  $$("#cats button").forEach((b) => (b.onclick = () => {
+    $$("#cats button").forEach((x) => x.classList.toggle("on", x === b));
+    $("#liste").scrollTop = $("#c" + b.dataset.i).offsetTop - $("#liste").offsetTop - 4;
+  }));
+  $$("#filtres button").forEach((b) => (b.onclick = () => { filtres.has(b.dataset.k) ? filtres.delete(b.dataset.k) : filtres.add(b.dataset.k); rendu(); }));
+  $$(".plat").forEach((b) => (b.onclick = () => fiche(b.dataset.id)));
+}
+
+function fiche(id) {
+  const p = PLATS.find((x) => x.id === id), t = T[L], dedans = sel.has(id);
+  ouvre(`<h3>${esc(p[L])}</h3><div class="prix">${euro(p.prix)}</div><p>${esc(p.desc[L])}</p>
+    <div class="etiq">${p.tags.map((k) => `<span>${C.tags[k].emoji} ${esc(C.tags[k][L])}</span>`).join("")}</div>
+    <p class="all"><b>${t.allergenes} :</b> ${esc(p.allergenes)}</p>
+    <button class="cta ${dedans ? "retire" : ""}" id="basc">${dedans ? t.retirer : t.ajouter}</button>`);
+  $("#basc").onclick = () => { dedans ? sel.delete(id) : sel.add(id); ferme(); rendu(); };
+}
+$("#barre").onclick = () => {
+  const t = T[L], choisis = PLATS.filter((p) => sel.has(p.id));
+  ouvre(`<h3>${t.selection}${table ? " · " + t.table + " " + esc(table) : ""}</h3><ul class="sel">${choisis.map((p) => `<li><span>${esc(p[L])}</span><span>${euro(p.prix)}</span></li>`).join("")}
+    <li class="tot"><span>${t.total}</span><span>${euro(choisis.reduce((s, p) => s + p.prix, 0))}</span></li></ul><p class="all">${t.montrer}</p>
+    <button class="cta retire" id="vider">${t.vider}</button>`);
+  $("#vider").onclick = () => { sel.clear(); ferme(); rendu(); };
+};
+$("#voile").onclick = ferme;
+$$("#langue button").forEach((b) => (b.onclick = () => { L = b.dataset.l; rendu(); }));
+rendu();
+</script>
+</body>
+</html>

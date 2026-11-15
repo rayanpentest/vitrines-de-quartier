@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Café</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f3e3c8;--encre:#3a1f12;--accent:#e2572b;--second:#f2a93b;--cafe:#5a2f18}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--fond);color:var(--encre);line-height:1.55;overflow-x:hidden}
+a{color:inherit}
+h1,h2,h3,.logo{font-family:"Bagel Fat One",Impact,sans-serif;font-weight:400;line-height:.95}
+.page{max-width:1180px;margin:auto;padding:0 clamp(16px,4vw,40px);display:grid;grid-template-columns:1fr clamp(150px,24vw,300px);gap:clamp(16px,4vw,60px)}
+.top{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:20px 0;gap:14px}
+.logo{font-size:1.9rem;color:var(--accent)}
+.etat{font-weight:700;font-size:.82rem;background:var(--encre);color:var(--fond);padding:7px 14px;border-radius:99px}
+.etat.ouvert{background:var(--accent)}
+/* la tasse qui se remplit au défilement */
+.tasse{position:sticky;top:12vh;height:76vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;align-self:start}
+.tasse svg{width:100%;overflow:visible}
+.tasse p{font-family:"Bagel Fat One",sans-serif;font-size:clamp(1rem,2vw,1.5rem);text-align:center;color:var(--accent)}
+.vapeur path{stroke:var(--encre);stroke-width:5;fill:none;stroke-linecap:round;opacity:0;animation:vapeur 3s ease-in-out infinite}
+.vapeur path:nth-child(2){animation-delay:.9s}.vapeur path:nth-child(3){animation-delay:1.7s}
+.chaud .vapeur path{animation-play-state:running}.vapeur path{animation-play-state:paused}
+@keyframes vapeur{0%{opacity:0;transform:translateY(12px)}40%{opacity:.5}100%{opacity:0;transform:translateY(-22px)}}
+.hero{padding:clamp(20px,5vw,70px) 0 clamp(50px,8vw,110px)}
+h1{font-size:clamp(3.2rem,10vw,8.6rem);color:var(--encre);letter-spacing:-.01em}
+h1 span{color:var(--accent);display:block}
+.intro{max-width:44ch;font-size:1.15rem;margin-top:24px}
+.btn{display:inline-block;margin:26px 12px 0 0;padding:14px 26px;border-radius:99px;background:var(--encre);color:var(--fond);text-decoration:none;font-weight:700;box-shadow:0 5px 0 var(--accent);transition:.15s}
+.btn:hover{transform:translateY(3px);box-shadow:0 2px 0 var(--accent)}
+.bloc{padding:clamp(34px,5vw,60px) 0;border-top:3px solid var(--encre)}
+h2{font-size:clamp(2.2rem,5.5vw,4.2rem);margin-bottom:26px}
+.menu{columns:2 260px;column-gap:44px}
+.menu section{break-inside:avoid;margin-bottom:30px}
+.menu h3{font-size:1.5rem;color:var(--accent);margin-bottom:10px}
+.menu li{display:flex;gap:10px;align-items:baseline;padding:6px 0;font-weight:500}
+.menu li::after{content:"";order:1;flex:1;border-bottom:2px dotted var(--encre);opacity:.35}
+.menu li b{order:2}
+.menu ul{list-style:none;padding:0}
+.grains{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.grains article{border-radius:26px;padding:24px;color:var(--fond);background:var(--cafe);transition:transform .3s}
+.grains article:nth-child(2){background:var(--accent)}.grains article:nth-child(3){background:var(--second);color:var(--encre)}
+.grains article:hover{transform:rotate(-2deg) scale(1.03)}
+.grains h3{font-size:1.5rem;margin-bottom:8px}
+.grains b{display:block;margin-top:16px;font-size:1.2rem}
+.hor{list-style:none;padding:0;max-width:420px}
+.hor li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:2px dotted #3a1f1244}
+.hor .auj{color:var(--accent);font-weight:700}
+footer{grid-column:1/-1;padding:26px 0;font-size:.82rem;opacity:.65;border-top:3px solid var(--encre)}
+@media(max-width:700px){.page{grid-template-columns:1fr}.tasse{position:fixed;top:auto;bottom:14px;right:14px;width:92px;height:auto;z-index:4;background:var(--fond);border:3px solid var(--encre);border-radius:22px;padding:10px 8px 6px;gap:2px}.tasse p{font-size:.7rem}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top"><span class="logo" data-t="nom"></span><span class="etat" data-etat></span></header>
+
+  <main>
+    <section class="hero">
+      <h1 id="h1"></h1>
+      <p class="intro" data-t="intro"></p>
+      <a class="btn" href="#carte">La carte ↓</a><a class="btn" data-href="maps" target="_blank" rel="noopener">Nous trouver</a>
+    </section>
+    <section class="bloc" id="carte"><h2 class="rv">La carte</h2><div class="menu" id="menu"></div></section>
+    <section class="bloc"><h2 class="rv">Nos grains, à emporter</h2><div class="grains" id="grains"></div></section>
+    <section class="bloc"><h2 class="rv">Horaires</h2><ul class="hor" data-horaires></ul>
+      <p style="margin-top:22px" data-t="adresse"></p><a class="btn" data-href="tel" data-t="telephone"></a></section>
+  </main>
+
+  <aside class="tasse" id="tasse" aria-hidden="true">
+    <svg viewBox="0 0 240 250">
+      <g class="vapeur"><path d="M80 50 q-14 -18 0 -36"/><path d="M110 46 q14 -20 0 -40"/><path d="M140 50 q-14 -18 0 -36"/></g>
+      <defs><clipPath id="interieur"><path d="M36 76 h148 v84 a60 60 0 0 1 -60 60 h-28 a60 60 0 0 1 -60 -60 z"/></clipPath></defs>
+      <g clip-path="url(#interieur)">
+        <rect width="240" height="250" fill="#fffaf0"/>
+        <g id="niveau" style="transform:translateY(150px);transition:transform .25s linear">
+          <rect y="76" width="240" height="160" fill="var(--cafe)"/>
+          <path d="M0 78 q30 -10 60 0 t60 0 t60 0 t60 0 v8 h-240 z" fill="var(--second)"/>
+        </g>
+      </g>
+      <path d="M36 76 h148 v84 a60 60 0 0 1 -60 60 h-28 a60 60 0 0 1 -60 -60 z" fill="none" stroke="var(--encre)" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M184 100 h14 a26 26 0 0 1 0 52 h-16" fill="none" stroke="var(--encre)" stroke-width="7" stroke-linecap="round"/>
+      <path d="M20 238 h180" stroke="var(--encre)" stroke-width="7" stroke-linecap="round"/>
+    </svg>
+    <p id="niveauTxt">0 %</p>
+  </aside>
+
+  <footer data-copy></footer>
+</div>
+
+<script>
+const { $, esc, euro } = K, C = CONFIG;
+const virgule = C.accroche.split(", ");
+$("#h1").innerHTML = esc(virgule[0]) + (virgule[1] ? `,<span>${esc(virgule[1])}</span>` : "");
+$("#menu").innerHTML = C.carte.map((s) => `<section><h3>${esc(s.titre)}</h3><ul>${s.items.map((i) => `<li><span>${esc(i.nom)}</span><b>${euro(i.prix)}</b></li>`).join("")}</ul></section>`).join("");
+$("#grains").innerHTML = C.grains.map((g) => `<article class="rv"><h3>${esc(g.nom)}</h3><p>${esc(g.notes)}</p><b>${euro(g.prix)} · 250 g</b></article>`).join("");
+
+// La tasse se remplit selon la progression dans la page
+function remplir() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  const p = max > 0 ? Math.min(scrollY / max, 1) : 1;
+  $("#niveau").style.transform = `translateY(${150 * (1 - p)}px)`;
+  $("#niveauTxt").textContent = p > 0.97 ? "C'est servi !" : Math.round(p * 100) + " %";
+  $("#tasse").classList.toggle("chaud", p > 0.25);
+}
+addEventListener("scroll", remplir, { passive: true });
+addEventListener("resize", remplir);
+remplir();
+</script>
+</body>
+</html>

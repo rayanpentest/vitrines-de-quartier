@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7ec">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Click &amp; collect</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#f5f7ec;--encre:#1d3a24;--accent:#e8492b;--doux:#dfe9c9;--ext:#1d3a24}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Bricolage Grotesque",system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #0f1f13,0 40px 90px -20px #000a}}
+header{padding:30px 20px 10px}
+header small{font-weight:600;color:var(--accent)}
+h1{font-size:1.9rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+.etat{display:inline-block;margin-top:10px;font-size:.78rem;font-weight:600;padding:5px 11px;border-radius:99px;background:var(--doux)}
+.etat.ouvert{background:var(--encre);color:var(--fond)}
+.rayons{display:flex;gap:8px;overflow-x:auto;padding:10px 20px 12px;scrollbar-width:none;flex:none}
+.rayons button{white-space:nowrap;font-weight:600;padding:9px 16px;border-radius:99px;background:#fff;transition:.2s}
+.rayons button.on{background:var(--encre);color:var(--fond)}
+.scroll{flex:1;overflow-y:auto;padding:0 20px 110px;scrollbar-width:none;scroll-behavior:smooth}
+h2{font-size:1.25rem;font-weight:800;margin:18px 0 10px;letter-spacing:-.02em}
+.prod{display:flex;align-items:center;gap:14px;background:#fff;border-radius:22px;padding:10px;margin-bottom:10px}
+.vis{width:62px;height:62px;border-radius:16px;background:var(--doux);display:grid;place-items:center;font-size:2rem;flex:none;overflow:hidden}
+.vis img{width:100%;height:100%;object-fit:cover}
+.prod div.t{flex:1;min-width:0}
+.prod b{display:block;font-weight:600;line-height:1.2}
+.prod small{opacity:.65}
+.prod em{font-style:normal;font-weight:800;color:var(--accent)}
+.qte{display:flex;align-items:center;background:var(--fond);border-radius:99px;padding:3px}
+.qte button{width:36px;height:36px;border-radius:50%;font-size:1.3rem;font-weight:600;background:var(--encre);color:var(--fond);transition:transform .12s}
+.qte button:active{transform:scale(.85)}
+.qte button.m{background:#fff;color:var(--encre)}
+.qte span{min-width:26px;text-align:center;font-weight:800}
+.qte.zero .m,.qte.zero span{display:none}
+.barre{position:absolute;inset:auto 14px 18px;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 20px;border-radius:22px;background:var(--accent);color:#fff;font-weight:800;transform:translateY(140%);transition:transform .4s cubic-bezier(.2,1.3,.4,1);box-shadow:0 16px 30px -12px var(--accent)}
+.barre.on{transform:none}
+.barre span{background:#fff3;border-radius:99px;padding:3px 10px;font-size:.85rem}
+.voile{position:absolute;inset:0;background:#0008;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:var(--fond);border-radius:30px 30px 0 0;padding:24px 20px 26px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1);max-height:90%;overflow:auto}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet h3{font-size:1.5rem;font-weight:800;margin-bottom:12px}
+.lignes{list-style:none;padding:0;margin-bottom:8px}
+.lignes li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1.5px dashed var(--doux)}
+.total{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:800;padding:12px 0 16px}
+label{display:block;font-size:.8rem;font-weight:600;opacity:.7;margin:10px 0 5px}
+input,select{width:100%;padding:14px;border-radius:14px;border:2px solid var(--doux);background:#fff;outline:0}
+input:focus,select:focus{border-color:var(--encre)}
+.envoyer{display:block;width:100%;margin-top:18px;padding:17px;border-radius:18px;background:var(--encre);color:var(--fond);font-weight:800;text-align:center;text-decoration:none}
+.note{font-size:.78rem;opacity:.6;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header><small data-t="metier"></small><h1 data-t="nom"></h1><span class="etat" data-etat></span></header>
+  <nav class="rayons" id="rayons"></nav>
+  <div class="scroll" id="liste"></div>
+  <button class="barre" id="barre"><span id="bNb"></span>Voir mon panier<b id="bTotal"></b></button>
+  <div class="voile" id="voile"></div>
+  <div class="sheet">
+    <h3>Mon panier</h3>
+    <ul class="lignes" id="lignes"></ul>
+    <div class="total"><span>Total</span><span id="total"></span></div>
+    <label for="prenom">Votre prénom</label><input id="prenom" placeholder="Ex. Camille" autocomplete="given-name">
+    <label for="creneau">Retrait en boutique</label><select id="creneau"></select>
+    <a class="envoyer" id="envoyer" target="_blank" rel="noopener">Envoyer ma commande</a>
+    <p class="note">La commande part par WhatsApp. Paiement en boutique au retrait.</p>
+  </div>
+</div>
+
+<script>
+const { $, $$, esc, euro, fh, min, plages, wa, store, visuel, JOURS } = K, C = CONFIG;
+const P = C.rayons.flatMap((r, i) => r.produits.map((p, j) => ({ ...p, id: i + "-" + j })));
+let panier = store.get("panier", {});
+Object.keys(panier).forEach((k) => { if (!P.find((p) => p.id === k)) delete panier[k]; });
+
+$("#rayons").innerHTML = C.rayons.map((r, i) => `<button data-i="${i}" class="${i ? "" : "on"}">${esc(r.nom)}</button>`).join("");
+$("#liste").innerHTML = C.rayons.map((r, i) => `<h2 id="r${i}">${esc(r.nom)}</h2>` + r.produits.map((p, j) =>
+  `<div class="prod"><div class="vis">${visuel(p)}</div><div class="t"><b>${esc(p.nom)}</b><small><em>${euro(p.prix)}</em> · ${esc(p.unite)}</small></div>
+   <div class="qte" data-id="${i}-${j}"><button class="m" aria-label="Retirer">−</button><span></span><button class="p" aria-label="Ajouter">+</button></div></div>`).join("")).join("");
+$$("#rayons button").forEach((b) => (b.onclick = () => {
+  $$("#rayons button").forEach((x) => x.classList.toggle("on", x === b));
+  $("#liste").scrollTop = $("#r" + b.dataset.i).offsetTop - $("#liste").offsetTop - 6;
+}));
+
+function maj() {
+  let nb = 0, total = 0;
+  $$(".qte").forEach((q) => { const n = panier[q.dataset.id] || 0; q.classList.toggle("zero", !n); q.querySelector("span").textContent = n; });
+  const lignes = P.filter((p) => panier[p.id]).map((p) => { const n = panier[p.id]; nb += n; total += n * p.prix; return { p, n }; });
+  $("#barre").classList.toggle("on", nb > 0);
+  $("#bNb").textContent = nb; $("#bTotal").textContent = euro(total);
+  $("#lignes").innerHTML = lignes.map(({ p, n }) => `<li><span>${n} × ${esc(p.nom)}</span><b>${euro(n * p.prix)}</b></li>`).join("");
+  $("#total").textContent = euro(total);
+  if (!nb) $("#app").classList.remove("ouvert");
+  store.set("panier", panier);
+  const prenom = $("#prenom").value.trim() || "(prénom)";
+  $("#envoyer").href = wa(`Bonjour ${C.nom} ! Commande de ${prenom} :\n` + lignes.map(({ p, n }) => `• ${n} × ${p.nom} (${p.unite})`).join("\n") + `\nTotal : ${euro(total)}\nRetrait : ${$("#creneau").value}`);
+}
+$("#liste").onclick = (e) => {
+  const b = e.target.closest(".qte button"); if (!b) return;
+  const id = b.parentNode.dataset.id;
+  panier[id] = Math.max(0, (panier[id] || 0) + (b.classList.contains("p") ? 1 : -1));
+  if (!panier[id]) delete panier[id];
+  maj();
+};
+
+// Créneaux de retrait : aujourd'hui (après le temps de préparation) puis le prochain jour ouvert
+function creneaux() {
+  const out = [], d = new Date(), now = d.getHours() * 60 + d.getMinutes();
+  const txt = (t) => fh(String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"));
+  for (let j = 0; j < 7 && out.length < 10; j++) {
+    const jour = (d.getDay() + j) % 7, nom = j === 0 ? "Aujourd'hui" : j === 1 ? "Demain" : JOURS[jour];
+    for (const [a, b] of plages(C.horaires[jour])) {
+      const debut = j === 0 ? Math.max(min(a), Math.ceil((now + C.preparation) / 30) * 30) : min(a) + 30;
+      for (let t = debut; t <= min(b) - 15 && out.length < 10; t += j === 0 ? 30 : 60) out.push(`${nom} à ${txt(t)}`);
+    }
+    if (out.length >= 4 && j >= 1) break;
+  }
+  return out;
+}
+$("#creneau").innerHTML = creneaux().map((c) => `<option>${esc(c)}</option>`).join("");
+$("#prenom").value = store.get("prenom", "");
+$("#prenom").oninput = () => { store.set("prenom", $("#prenom").value); maj(); };
+$("#creneau").onchange = maj;
+$("#barre").onclick = () => $("#app").classList.add("ouvert");
+$("#voile").onclick = () => $("#app").classList.remove("ouvert");
+$("#envoyer").onclick = (e) => { if (!$("#prenom").value.trim()) { e.preventDefault(); $("#prenom").focus(); K.toast("Indiquez votre prénom"); } };
+maj();
+</script>
+</body>
+</html>
