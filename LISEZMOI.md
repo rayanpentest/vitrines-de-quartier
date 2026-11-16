@@ -92,4 +92,16 @@ Pour démarcher :
 
 ## Et Xcode ?
 
-Les apps sont des « web apps » : elles s'installent depuis Safari, sans App Store, ce qui évite le compte développeur Apple (99 $/an) et la validation. Si un client veut absolument être sur l'App Store, on peut les emballer dans une app iOS avec Xcode (un écran `WKWebView` qui charge l'app) — c'est une étape à part.
+Les apps sont des « web apps » : elles s'installent depuis Safari, sans App Store, ce qui évite le compte développeur Apple (99 $/an) et la validation. Si un client veut absolument être sur l'App Store, le dossier `ios/` contient un projet Xcode qui emballe n'importe laquelle des apps dans une vraie app iOS.
+
+### L'app iOS (dossier `ios/`)
+
+1. Choisissez l'app à embarquer et le nom affiché sous l'icône :
+   `sh outils/ios-choisir-app.sh apps/03-rendez-vous "Salon Léa"`
+   (un dossier `clients/...` marche aussi). Le script copie l'app dans `ios/web` et refait l'icône.
+2. Ouvrez `ios/Vitrine.xcodeproj` dans Xcode, choisissez un simulateur d'iPhone, puis ▶.
+3. Après chaque modification de `config.js`, relancez le script puis ▶.
+
+Ce que fait l'app : elle affiche le contenu de `ios/web` hors ligne, garde les données (tampons, favoris, réservations) d'un lancement à l'autre, et ouvre WhatsApp, le téléphone ou Plans pour les liens externes. Le code tient dans deux fichiers : `ios/Vitrine/VitrineApp.swift` et `ios/Vitrine/PageWeb.swift`.
+
+Pour l'installer sur un vrai iPhone ou la publier, il faut dans Xcode (cible Vitrine → Signing & Capabilities) : choisir votre équipe (un identifiant Apple gratuit suffit pour tester sur votre iPhone ; l'App Store demande le compte développeur à 99 $/an) et remplacer l'identifiant `fr.vitrinesdequartier.vitrine` par un identifiant propre à chaque client. Apple refuse parfois les apps qui ne sont qu'un site emballé : mettez en avant ce que l'app fait vraiment (carte de fidélité, réservation, file d'attente).

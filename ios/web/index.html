@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a120d">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<title>Carte de fidélité</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script src="kit.js"></script>
+<style>
+:root{--fond:#1a120d;--encre:#f6ead9;--accent:#f08a3c;--carte1:#e2572b;--carte2:#f2a93b;--ext:#0d0906}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--ext);color:var(--encre);display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.app{width:100%;max-width:430px;height:100dvh;background:var(--fond);position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:520px){.app{height:min(880px,94dvh);border-radius:46px;box-shadow:0 0 0 11px #26221f,0 40px 90px -20px #000}}
+.scroll{flex:1;overflow-y:auto;padding:0 20px 28px;scrollbar-width:none}
+header{padding:34px 22px 18px}
+header small{text-transform:uppercase;letter-spacing:.2em;font-size:.72rem;opacity:.6}
+h1{font-family:"Bagel Fat One",sans-serif;font-weight:400;font-size:2.3rem;line-height:1;color:var(--accent)}
+.zone{perspective:900px}
+.carte{border-radius:28px;padding:22px;background:linear-gradient(135deg,var(--carte1),var(--carte2));color:#2a1408;box-shadow:0 24px 50px -18px var(--carte1);transition:transform .2s;position:relative;overflow:hidden}
+.carte::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,#fff5 50%,transparent 60%);transform:translateX(var(--reflet,-60%));transition:transform .3s;pointer-events:none}
+.haut{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}
+.haut b{font-family:"Bagel Fat One",sans-serif;font-weight:400;font-size:1.7rem}
+.tampons{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 16px}
+.tampons i{aspect-ratio:1;border-radius:50%;border:2.5px dashed #2a140866;display:grid;place-items:center;font-style:normal;font-size:1.5rem}
+.tampons i.ok{border:0;background:#2a1408;box-shadow:inset 0 -3px 0 #0005}
+.tampons i.neuf{animation:tampon .55s cubic-bezier(.2,1.8,.4,1)}
+.tampons i.cadeau{border-style:solid;font-size:1.3rem}
+@keyframes tampon{0%{transform:scale(2.4) rotate(-30deg);opacity:0}60%{transform:scale(.9)}}
+.carte p{font-weight:500}
+.gros{width:100%;margin:20px 0 6px;padding:18px;border-radius:20px;background:var(--accent);color:#1a120d;font-weight:700;font-size:1.05rem;transition:transform .15s}
+.gros:active{transform:scale(.97)}
+.gros.or{background:linear-gradient(90deg,#ffe08a,#f2a93b);animation:brille 1.4s infinite}
+@keyframes brille{50%{box-shadow:0 0 0 8px #f2a93b33}}
+.stats{display:flex;gap:10px;margin:14px 0 24px}
+.stats div{flex:1;background:#ffffff0d;border-radius:18px;padding:14px}
+.stats b{display:block;font-family:"Bagel Fat One",sans-serif;font-weight:400;font-size:1.6rem;color:var(--accent)}
+.stats span{font-size:.8rem;opacity:.7}
+h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;opacity:.6;margin-bottom:8px}
+#hist{list-style:none;padding:0}
+#hist li{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #ffffff14;font-size:.95rem}
+#hist li span{opacity:.6}
+.voile{position:absolute;inset:0;background:#000a;opacity:0;pointer-events:none;transition:.3s;z-index:5}
+.sheet{position:absolute;inset:auto 0 0;z-index:6;background:#261a13;border-radius:30px 30px 0 0;padding:26px 22px 30px;transform:translateY(105%);transition:transform .4s cubic-bezier(.2,.9,.2,1);text-align:center}
+.ouvert .voile{opacity:1;pointer-events:auto}.ouvert .sheet{transform:none}
+.sheet h3{font-size:1.25rem}.sheet p{opacity:.65;font-size:.9rem;margin-top:4px}
+.points{display:flex;gap:14px;justify-content:center;margin:22px 0}
+.points i{width:16px;height:16px;border-radius:50%;border:2px solid var(--encre);transition:.15s}
+.points i.on{background:var(--accent);border-color:var(--accent);transform:scale(1.15)}
+.points.faux{animation:non .4s}
+@keyframes non{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.pave{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:280px;margin:auto}
+.pave button{aspect-ratio:1.4;border-radius:18px;background:#ffffff12;font-size:1.5rem;font-weight:500}
+.pave button:active{background:var(--accent);color:#000}
+.confetti{position:absolute;top:-12px;width:9px;height:14px;z-index:9;animation:tombe linear forwards;pointer-events:none}
+@keyframes tombe{to{transform:translateY(105vh) rotate(720deg)}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header><small data-t="metier"></small><h1 data-t="nom"></h1></header>
+  <div class="scroll">
+    <div class="zone"><div class="carte" id="carte">
+      <div class="haut"><span>Ma carte</span><b id="compte"></b></div>
+      <div class="tampons" id="tampons"></div>
+      <p id="reste"></p>
+    </div></div>
+    <button class="gros" id="action"></button>
+    <div class="stats"><div><b id="sVisites">0</b><span>passages au total</span></div><div><b id="sCadeaux">0</b><span>récompenses gagnées</span></div></div>
+    <h2>Derniers passages</h2>
+    <ul id="hist"></ul>
+  </div>
+  <div class="voile" id="voile"></div>
+  <div class="sheet">
+    <h3 id="sTitre"></h3><p>Tendez votre téléphone au commerçant : il saisit son code.</p>
+    <div class="points" id="points"></div>
+    <div class="pave" id="pave"></div>
+  </div>
+</div>
+
+<script>
+const { $, $$, esc, store, toast } = K, C = CONFIG;
+let S = store.get("carte", { n: 0, total: 0, cadeaux: 0, hist: [] }), saisie = "", mode = "tampon";
+
+function rendu(nouveau) {
+  const plein = S.n >= C.tampons;
+  $("#compte").textContent = S.n + " / " + C.tampons;
+  $("#tampons").innerHTML = Array.from({ length: C.tampons }, (_, i) =>
+    i < S.n ? `<i class="ok ${nouveau && i === S.n - 1 ? "neuf" : ""}">${esc(C.symbole)}</i>` : i === C.tampons - 1 ? `<i class="cadeau">🎁</i>` : "<i></i>").join("");
+  const r = C.tampons - S.n;
+  $("#reste").textContent = plein ? "Bravo ! " + C.recompense + " vous attend." : `Encore ${r} passage${r > 1 ? "s" : ""} : ${C.recompense.toLowerCase()}.`;
+  $("#action").textContent = plein ? "🎁 Utiliser ma récompense" : "Faire tamponner ma carte";
+  $("#action").classList.toggle("or", plein);
+  $("#sVisites").textContent = S.total;
+  $("#sCadeaux").textContent = S.cadeaux;
+  $("#hist").innerHTML = S.hist.length ? S.hist.slice(0, 8).map((h) => `<li>${esc(h.t)}<span>${esc(h.d)}</span></li>`).join("") : "<li><span>Aucun passage pour l'instant.</span></li>";
+  store.set("carte", S);
+}
+
+function points() { $("#points").innerHTML = [0, 1, 2, 3].map((i) => `<i class="${i < saisie.length ? "on" : ""}"></i>`).join(""); }
+function ouvre() {
+  mode = S.n >= C.tampons ? "cadeau" : "tampon";
+  $("#sTitre").textContent = mode === "cadeau" ? "Valider la récompense" : "Valider le passage";
+  saisie = ""; points(); $("#app").classList.add("ouvert");
+}
+const ferme = () => $("#app").classList.remove("ouvert");
+$("#action").onclick = ouvre;
+$("#voile").onclick = ferme;
+
+$("#pave").innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "⌫"].map((t) => (t === "" ? "<span></span>" : `<button>${t}</button>`)).join("");
+$$("#pave button").forEach((b) => (b.onclick = () => {
+  saisie = b.textContent === "⌫" ? saisie.slice(0, -1) : (saisie + b.textContent).slice(0, 4);
+  points();
+  if (saisie.length === 4) setTimeout(valide, 160);
+}));
+
+function valide() {
+  if (saisie !== String(C.codeCommercant)) {
+    saisie = ""; points();
+    $("#points").classList.add("faux"); setTimeout(() => $("#points").classList.remove("faux"), 420);
+    return;
+  }
+  const d = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  if (mode === "cadeau") { S.n = 0; S.cadeaux++; S.hist.unshift({ t: "🎁 " + C.recompense, d }); toast("Récompense utilisée. Régalez-vous !"); }
+  else { S.n++; S.total++; S.hist.unshift({ t: "Passage validé", d }); if (S.n >= C.tampons) confettis(); else toast("Tampon ajouté !"); }
+  S.hist = S.hist.slice(0, 30);
+  ferme(); rendu(mode === "tampon");
+  if (navigator.vibrate) navigator.vibrate(60);
+}
+
+function confettis() {
+  const couleurs = [C.couleurs.accent, C.couleurs.carte1, C.couleurs.carte2, "#fff"];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement("i");
+    c.className = "confetti";
+    c.style.cssText = `left:${Math.random() * 100}%;background:${couleurs[i % 4]};animation-duration:${1.4 + Math.random() * 1.6}s;animation-delay:${Math.random() * 0.4}s`;
+    $("#app").appendChild(c); setTimeout(() => c.remove(), 3600);
+  }
+}
+
+// La carte s'incline sous le doigt
+const carte = $("#carte");
+carte.onpointermove = (e) => {
+  const r = carte.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+  carte.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 14}deg)`;
+  carte.style.setProperty("--reflet", x * 120 + "%");
+};
+carte.onpointerleave = () => { carte.style.transform = ""; carte.style.setProperty("--reflet", "-60%"); };
+
+rendu(false);
+</script>
+</body>
+</html>
